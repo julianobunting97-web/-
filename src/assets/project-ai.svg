@@ -1,0 +1,42 @@
+<svg width="1600" height="980" viewBox="0 0 1600 980" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="102" y1="118" x2="1485" y2="890" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#070A0D" />
+      <stop offset="0.48" stop-color="#111A22" />
+      <stop offset="1" stop-color="#151E28" />
+    </linearGradient>
+    <radialGradient id="haloA" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(1228 260) rotate(132.44) scale(344 344)">
+      <stop stop-color="#8EB7C9" stop-opacity="0.44" />
+      <stop offset="1" stop-color="#8EB7C9" stop-opacity="0" />
+    </radialGradient>
+    <radialGradient id="haloB" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(408 720) rotate(41.26) scale(306 306)">
+      <stop stop-color="#B69768" stop-opacity="0.2" />
+      <stop offset="1" stop-color="#B69768" stop-opacity="0" />
+    </radialGradient>
+  </defs>
+  <rect width="1600" height="980" fill="url(#bg)" />
+  <circle cx="1228" cy="260" r="344" fill="url(#haloA)" />
+  <circle cx="408" cy="720" r="306" fill="url(#haloB)" />
+  <rect x="92" y="84" width="1416" height="812" rx="34" fill="white" fill-opacity="0.02" stroke="white" stroke-opacity="0.08" />
+  <g opacity="0.1">
+    <path d="M132 128H1470" stroke="white" />
+    <path d="M132 854H1470" stroke="white" />
+    <path d="M132 128V854" stroke="white" />
+    <path d="M1470 128V854" stroke="white" />
+  </g>
+  <rect x="194" y="214" width="465" height="550" rx="30" fill="white" fill-opacity="0.03" stroke="#8EB7C9" stroke-opacity="0.46" stroke-width="2" />
+  <rect x="251" y="271" width="349" height="190" rx="22" fill="#0E151C" stroke="white" stroke-opacity="0.12" />
+  <path d="M252 541C289.976 510.42 332.88 488.635 380.714 475.645C428.548 462.654 483.815 456.159 546.514 456.159C609.212 456.159 677.375 468.884 751 494.334" stroke="#EAF1F6" stroke-opacity="0.22" stroke-width="2.4" stroke-linecap="round" />
+  <path d="M253 590C313.021 554.509 370.716 530.251 426.086 517.226C481.455 504.201 548.905 497.688 628.435 497.688C707.964 497.688 797.486 513.138 897 544.04" stroke="#EAF1F6" stroke-opacity="0.18" stroke-width="2.4" stroke-linecap="round" />
+  <path d="M773 228H1330V365H773V228Z" fill="white" fill-opacity="0.03" stroke="#B69768" stroke-opacity="0.42" stroke-width="2" />
+  <path d="M773 408H1330V545H773V408Z" fill="white" fill-opacity="0.03" stroke="#8EB7C9" stroke-opacity="0.42" stroke-width="2" />
+  <path d="M773 588H1330V725H773V588Z" fill="white" fill-opacity="0.03" stroke="#EAF1F6" stroke-opacity="0.18" stroke-width="2" />
+  <path d="M837 292H1271" stroke="#EAF1F6" stroke-opacity="0.22" stroke-width="2.2" />
+  <path d="M837 473H1271" stroke="#EAF1F6" stroke-opacity="0.22" stroke-width="2.2" />
+  <path d="M837 652H1271" stroke="#EAF1F6" stroke-opacity="0.22" stroke-width="2.2" />
+  <path d="M841 256H1049" stroke="#EAF1F6" stroke-opacity="0.8" stroke-width="2.2" />
+  <path d="M841 436H1122" stroke="#EAF1F6" stroke-opacity="0.8" stroke-width="2.2" />
+  <path d="M841 616H1184" stroke="#EAF1F6" stroke-opacity="0.8" stroke-width="2.2" />
+  <text x="138" y="159" fill="#EAF1F6" fill-opacity="0.82" font-family="Segoe UI, Microsoft YaHei UI, sans-serif" font-size="24" letter-spacing="6">AI-ASSISTED SPATIAL CONCEPTS / WORKFLOW STUDY</text>
+</svg>
+

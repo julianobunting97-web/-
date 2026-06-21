@@ -1,0 +1,46 @@
+<svg width="1600" height="980" viewBox="0 0 1600 980" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="120" y1="82" x2="1444" y2="904" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#0A0E12" />
+      <stop offset="0.5" stop-color="#13202B" />
+      <stop offset="1" stop-color="#1A2025" />
+    </linearGradient>
+    <radialGradient id="glow" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(1201 217) rotate(127.919) scale(369 369)">
+      <stop stop-color="#8AB2C5" stop-opacity="0.4" />
+      <stop offset="1" stop-color="#8AB2C5" stop-opacity="0" />
+    </radialGradient>
+    <radialGradient id="warm" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(367 804) rotate(35.006) scale(344 344)">
+      <stop stop-color="#B79767" stop-opacity="0.24" />
+      <stop offset="1" stop-color="#B79767" stop-opacity="0" />
+    </radialGradient>
+  </defs>
+  <rect width="1600" height="980" fill="url(#bg)" />
+  <circle cx="1201" cy="217" r="369" fill="url(#glow)" />
+  <circle cx="367" cy="804" r="344" fill="url(#warm)" />
+  <g opacity="0.11">
+    <path d="M70 110H1530" stroke="white" />
+    <path d="M70 240H1530" stroke="white" />
+    <path d="M70 370H1530" stroke="white" />
+    <path d="M70 500H1530" stroke="white" />
+    <path d="M70 630H1530" stroke="white" />
+    <path d="M70 760H1530" stroke="white" />
+    <path d="M70 890H1530" stroke="white" />
+    <path d="M182 62V920" stroke="white" />
+    <path d="M394 62V920" stroke="white" />
+    <path d="M606 62V920" stroke="white" />
+    <path d="M818 62V920" stroke="white" />
+    <path d="M1030 62V920" stroke="white" />
+    <path d="M1242 62V920" stroke="white" />
+    <path d="M1454 62V920" stroke="white" />
+  </g>
+  <rect x="103" y="96" width="1394" height="788" rx="34" fill="white" fill-opacity="0.02" stroke="white" stroke-opacity="0.08" />
+  <path d="M137 575C245.817 532.245 336.615 505.57 409.394 494.974C482.173 484.378 590.481 483.444 734.32 492.171C878.159 500.898 991.014 502.451 1072.88 496.83C1154.75 491.209 1280.79 466.513 1451 422.742" stroke="#E8F0F6" stroke-opacity="0.38" stroke-width="2.5" />
+  <path d="M137 628C228.157 594.281 314.879 572.665 397.167 563.15C479.456 553.634 605.527 554.282 775.38 565.092C945.233 575.902 1067.2 576.871 1141.29 567.999C1215.38 559.127 1318.62 539.18 1451 508.16" stroke="#E8F0F6" stroke-opacity="0.31" stroke-width="2.5" />
+  <path d="M137 680C253.516 645.88 375.011 629.143 501.486 629.791C627.96 630.439 745.208 643.96 853.23 670.355C961.251 696.75 1062.66 706.157 1157.45 698.576C1252.25 690.995 1350.1 665.519 1451 622.147" stroke="#E8F0F6" stroke-opacity="0.26" stroke-width="2.5" />
+  <path d="M309 202H826V390H309V202Z" fill="white" fill-opacity="0.04" stroke="#91B7C7" stroke-opacity="0.48" stroke-width="2" />
+  <path d="M351 242H785V348H351V242Z" fill="#0C131A" stroke="white" stroke-opacity="0.12" />
+  <path d="M902 264C963.38 237.164 1020.04 223.746 1071 223.746C1121.96 223.746 1179.64 237.164 1244.04 264C1308.44 290.836 1360.76 334.643 1401 395.42C1350.59 420.587 1298.28 433.17 1244.04 433.17C1189.81 433.17 1132.03 420.587 1070.69 395.42C1009.36 370.253 953.13 326.446 902 264Z" fill="white" fill-opacity="0.03" stroke="#B79767" stroke-opacity="0.44" stroke-width="2" />
+  <path d="M314 405C422.253 420.471 517.674 429.383 600.263 431.735C682.852 434.087 781.939 431.462 897.524 423.86" stroke="#E8F0F6" stroke-opacity="0.22" stroke-width="1.6" stroke-linecap="round" />
+  <text x="137" y="158" fill="#E8F0F6" fill-opacity="0.82" font-family="Segoe UI, Microsoft YaHei UI, sans-serif" font-size="24" letter-spacing="6">LANDSCAPE RENEWAL / 1532 INDUSTRIAL PARK</text>
+</svg>
+

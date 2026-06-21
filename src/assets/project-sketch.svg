@@ -1,0 +1,36 @@
+<svg width="1600" height="980" viewBox="0 0 1600 980" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="180" y1="66" x2="1399" y2="924" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#080B0E" />
+      <stop offset="0.56" stop-color="#14181E" />
+      <stop offset="1" stop-color="#181D24" />
+    </linearGradient>
+    <radialGradient id="glow" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(1131 243) rotate(136.621) scale(389 389)">
+      <stop stop-color="#8DB6C8" stop-opacity="0.3" />
+      <stop offset="1" stop-color="#8DB6C8" stop-opacity="0" />
+    </radialGradient>
+  </defs>
+  <rect width="1600" height="980" fill="url(#bg)" />
+  <circle cx="1131" cy="243" r="389" fill="url(#glow)" />
+  <rect x="98" y="88" width="1404" height="804" rx="34" fill="white" fill-opacity="0.02" stroke="white" stroke-opacity="0.08" />
+  <g opacity="0.1">
+    <path d="M118 132H1481" stroke="white" />
+    <path d="M118 252H1481" stroke="white" />
+    <path d="M118 372H1481" stroke="white" />
+    <path d="M118 492H1481" stroke="white" />
+    <path d="M118 612H1481" stroke="white" />
+    <path d="M118 732H1481" stroke="white" />
+    <path d="M118 852H1481" stroke="white" />
+  </g>
+  <path d="M322 706C433.413 687.149 547.121 675.875 663.124 672.177C779.127 668.479 891.453 674.775 1000.1 691.067C1108.74 707.359 1218.04 733.003 1327.99 767.998" stroke="#EAF1F6" stroke-opacity="0.33" stroke-width="3" stroke-linecap="round" />
+  <path d="M381 637C467.778 596.088 540.622 548.669 599.531 494.741C658.439 440.813 709.15 376.091 751.664 300.575C825.546 366.122 899.42 435.232 973.284 507.907C1047.15 580.582 1117.92 666.754 1185.61 766.424" stroke="#EAF1F6" stroke-opacity="0.52" stroke-width="3" stroke-linecap="round" />
+  <path d="M354 631L750 302L1188 767" stroke="#8FB7C9" stroke-opacity="0.9" stroke-width="2.4" stroke-linecap="round" stroke-dasharray="6 10" />
+  <path d="M765 319C790.293 319 810.8 298.493 810.8 273.2C810.8 247.907 790.293 227.4 765 227.4C739.707 227.4 719.2 247.907 719.2 273.2C719.2 298.493 739.707 319 765 319Z" stroke="#EAF1F6" stroke-opacity="0.6" stroke-width="2.2" />
+  <path d="M799 351L840 391" stroke="#EAF1F6" stroke-opacity="0.45" stroke-width="2.2" stroke-linecap="round" />
+  <rect x="1138" y="184" width="244" height="152" rx="24" fill="white" fill-opacity="0.03" stroke="#B79767" stroke-opacity="0.42" stroke-width="2" />
+  <path d="M1169 259H1350" stroke="#EAF1F6" stroke-opacity="0.18" stroke-width="2" />
+  <path d="M1169 229H1267" stroke="#EAF1F6" stroke-opacity="0.72" stroke-width="2" />
+  <path d="M1169 289H1318" stroke="#EAF1F6" stroke-opacity="0.34" stroke-width="2" />
+  <text x="139" y="160" fill="#EAF1F6" fill-opacity="0.82" font-family="Segoe UI, Microsoft YaHei UI, sans-serif" font-size="24" letter-spacing="6">SKETCH RESEARCH / SPATIAL OBSERVATION</text>
+</svg>
+

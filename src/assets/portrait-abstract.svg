@@ -1,0 +1,44 @@
+<svg width="900" height="1200" viewBox="0 0 900 1200" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="84" y1="96" x2="842" y2="1116" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#070A0D" />
+      <stop offset="0.55" stop-color="#111821" />
+      <stop offset="1" stop-color="#171F29" />
+    </linearGradient>
+    <radialGradient id="glowA" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(285 258) rotate(41.3) scale(312 312)">
+      <stop stop-color="#84AEC1" stop-opacity="0.32" />
+      <stop offset="1" stop-color="#84AEC1" stop-opacity="0" />
+    </radialGradient>
+    <radialGradient id="glowB" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(682 862) rotate(121.17) scale(328 328)">
+      <stop stop-color="#B59461" stop-opacity="0.22" />
+      <stop offset="1" stop-color="#B59461" stop-opacity="0" />
+    </radialGradient>
+  </defs>
+  <rect width="900" height="1200" fill="url(#bg)" />
+  <rect x="76" y="72" width="748" height="1052" rx="30" stroke="white" stroke-opacity="0.08" />
+  <circle cx="285" cy="258" r="312" fill="url(#glowA)" />
+  <circle cx="682" cy="862" r="328" fill="url(#glowB)" />
+  <g opacity="0.12">
+    <path d="M90 198H810" stroke="white" />
+    <path d="M90 336H810" stroke="white" />
+    <path d="M90 474H810" stroke="white" />
+    <path d="M90 612H810" stroke="white" />
+    <path d="M90 750H810" stroke="white" />
+    <path d="M90 888H810" stroke="white" />
+    <path d="M190 90V1110" stroke="white" />
+    <path d="M356 90V1110" stroke="white" />
+    <path d="M522 90V1110" stroke="white" />
+    <path d="M688 90V1110" stroke="white" />
+  </g>
+  <path d="M291 1066C362.426 960.567 423.269 907.833 473.529 907.799C523.789 907.766 591.28 960.499 676 1066" stroke="#EAF1F6" stroke-opacity="0.78" stroke-width="2.8" stroke-linecap="round" />
+  <path d="M338 902C336.385 804.459 368.571 730.947 434.559 681.465C500.547 631.983 567.331 631.51 634.911 680.045C702.492 728.581 737.455 802.098 739.8 900.597" stroke="#EAF1F6" stroke-opacity="0.72" stroke-width="2.8" stroke-linecap="round" />
+  <path d="M421 620C381.588 585.175 362.333 545.845 363.235 501.012C364.136 456.179 383.932 418.143 422.621 386.903C461.311 355.664 504.052 340.082 550.844 340.158C597.635 340.233 638.613 355.839 673.778 386.975C708.943 418.111 726.726 455.979 727.127 500.577C727.529 545.175 710.79 584.488 676.91 618.517" stroke="#EAF1F6" stroke-opacity="0.72" stroke-width="2.8" stroke-linecap="round" />
+  <path d="M453 516C471.731 533.47 494.885 542.205 522.461 542.205C550.036 542.205 573.209 533.47 591.98 516" stroke="#91B7C7" stroke-opacity="0.95" stroke-width="3.5" stroke-linecap="round" />
+  <path d="M461 453C482.269 433.487 503.519 423.731 524.749 423.731C545.979 423.731 566.73 433.487 587 453" stroke="#EAF1F6" stroke-opacity="0.6" stroke-width="2.4" stroke-linecap="round" />
+  <path d="M493 631H622" stroke="#EAF1F6" stroke-opacity="0.42" stroke-width="2" />
+  <path d="M470 664H648" stroke="#EAF1F6" stroke-opacity="0.24" stroke-width="2" />
+  <rect x="118" y="1006" width="220" height="62" rx="31" fill="white" fill-opacity="0.05" stroke="white" stroke-opacity="0.1" />
+  <text x="156" y="1045" fill="#EAF1F6" fill-opacity="0.82" font-family="Segoe UI, Microsoft YaHei UI, sans-serif" font-size="20" letter-spacing="4">CAO SHUO</text>
+  <text x="119" y="1162" fill="#EAF1F6" fill-opacity="0.36" font-family="Segoe UI, Microsoft YaHei UI, sans-serif" font-size="20" letter-spacing="6">INTERIOR / AI / LANDSCAPE</text>
+</svg>
+
