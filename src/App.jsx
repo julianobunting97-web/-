@@ -74,7 +74,7 @@ const office1532Images = [
   { title: '效果图 09', meta: '公共办公区夜景', src: '/portfolio/1532-office/renders/render-09.png' },
   { title: '效果图 10', meta: '公共办公区域', src: '/portfolio/1532-office/renders/render-10.png' },
   { title: '效果图 11', meta: '机房空间', src: '/portfolio/1532-office/renders/render-11.jpeg' },
-  { title: '效果图 12', meta: '景观休闲区', src: '/portfolio/1532-office/renders/render-12.png' },
+  { title: '效果图 12', meta: '景观休闲区', src: '/portfolio/1532-office/renders/render-12.jpg' },
   { title: '效果图 13', meta: '私密洽谈室', src: '/portfolio/1532-office/renders/render-13.png' },
   { title: '效果图 14', meta: '展览空间', src: '/portfolio/1532-office/renders/render-14.png' },
 ]
