@@ -6,6 +6,9 @@ import ProfileCard from './components/ProfileCard'
 import { ProceduralVideoBackground } from './components/ProceduralVideoBackground'
 import portraitCaoShuo from './assets/portrait-cao-shuo.png'
 
+const contactEmail = 'julianobunting97@gmail.com'
+const gmailComposeUrl = 'https://mail.google.com/mail/?view=cm&fs=1&to=' + contactEmail
+
 const navigation = [
   { label: '首页', href: '#top' },
   { label: '个人经历', href: '#about' },
@@ -16,8 +19,8 @@ const navigation = [
 
 const profileStats = [
   { value: '3.86 / 4.0', label: 'GPA' },
-  { value: '3 / 40', label: '学年成绩排名' },
-  { value: '9 / 40', label: '学年综测排名' },
+  { value: '2 / 40', label: '学年成绩排名' },
+  { value: '7 / 40', label: '学年综测排名' },
   { value: '10+', label: '设计与 AI 工具' },
 ]
 
@@ -260,7 +263,7 @@ const honors = [
 
 const contactItems = [
   { label: '电话', value: '133 6144 4417', href: 'tel:13361444417' },
-  { label: '邮箱', value: '13361444417@163.com', href: 'mailto:13361444417@163.com' },
+  { label: '邮箱', value: contactEmail, href: gmailComposeUrl },
   { label: '城市', value: '山东省潍坊市', href: null },
 ]
 
@@ -573,7 +576,12 @@ export default function App() {
               </a>
             ))}
           </div>
-          <a className="button button-ghost nav-cta" href="mailto:13361444417@163.com">
+          <a
+            className="button button-ghost nav-cta"
+            href={gmailComposeUrl}
+            target="_blank"
+            rel="noreferrer"
+          >
             联系我
           </a>
         </div>
@@ -915,7 +923,12 @@ export default function App() {
                   </div>
                 ),
               )}
-              <a className="button button-primary contact-button" href="mailto:13361444417@163.com">
+              <a
+                className="button button-primary contact-button"
+                href={gmailComposeUrl}
+                target="_blank"
+                rel="noreferrer"
+              >
                 发送邮件
               </a>
             </PortfolioCard>
