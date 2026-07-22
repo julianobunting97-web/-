@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import PortfolioMotion from './components/PortfolioMotion'
 import PortfolioCard from './components/PortfolioCard'
@@ -33,7 +33,7 @@ const profileDetails = [
 
 const heroPosterMetrics = [
   { value: '3.86', label: 'GPA' },
-  { value: '3/40', label: '专业排名' },
+  { value: '2/40', label: '专业排名' },
   { value: '2027', label: '毕业时间' },
 ]
 
@@ -237,19 +237,19 @@ const projectCards = [
 const strengths = [
   {
     title: '跨领域空间视角',
-    text: '同时关注室内、景观与建筑语境，能在不同尺度下组织空间逻辑与体验节奏。',
+    text: '同时关注室内、景观与建筑语境，能够在不同尺度下组织空间逻辑，把场地、功能与体验连接起来。',
   },
   {
-    title: 'AI 驱动的概念效率',
-    text: '熟悉 Stable Diffusion、ComfyUI 与 Codex，可将灵感发散、图像实验与方案沟通接入设计流程。',
+    title: 'AIGC 设计思维',
+    text: '我理解 AIGC 不只是生成图片，而是一种帮助设计师快速推演、比较与深化方案的工具。通过控制变量、筛选结果与持续迭代，让 AI 服务于空间逻辑和设计判断。',
   },
   {
-    title: '手绘与数字表达并行',
-    text: '兼顾建筑速写功底与数字工具能力，从草图到渲染都能维持统一的审美与表达精度。',
+    title: '视觉表达与方案叙事',
+    text: '擅长将空间概念转化为效果图、展板、短片与网页展示，让设计逻辑、氛围体验和项目亮点被清晰看见。',
   },
   {
     title: '细节意识与协作能力',
-    text: '注重落地可行性，善于沟通协作，能快速适应项目节奏并高效推进任务。',
+    text: '关注材料、尺度、灯光和节点细节，能够整理需求、沟通反馈并持续迭代，推动方案从概念走向完整呈现。',
   },
 ]
 
@@ -264,7 +264,6 @@ const honors = [
 const contactItems = [
   { label: '电话', value: '133 6144 4417', href: 'tel:13361444417' },
   { label: '邮箱', value: contactEmail, href: gmailComposeUrl },
-  { label: '城市', value: '山东省潍坊市', href: null },
 ]
 
 function SectionHeader({ index, title, description }) {
@@ -327,6 +326,126 @@ function ProjectVideoEmbed({ item }) {
           快进 10s
         </button>
       </div>
+    </div>
+  )
+}
+
+function ZoomablePreviewImage({ item }) {
+  const canvasRef = useRef(null)
+  const imageRef = useRef(null)
+  const dragRef = useRef(null)
+  const [scale, setScale] = useState(1)
+  const [position, setPosition] = useState({ x: 0, y: 0 })
+  const [isDragging, setIsDragging] = useState(false)
+
+  const clampPosition = (nextPosition, nextScale) => {
+    const canvas = canvasRef.current
+    const image = imageRef.current
+
+    if (!canvas || !image || nextScale <= 1) return { x: 0, y: 0 }
+
+    const maxX = Math.max(0, (image.clientWidth * nextScale - canvas.clientWidth) / 2)
+    const maxY = Math.max(0, (image.clientHeight * nextScale - canvas.clientHeight) / 2)
+
+    return {
+      x: Math.max(-maxX, Math.min(maxX, nextPosition.x)),
+      y: Math.max(-maxY, Math.min(maxY, nextPosition.y)),
+    }
+  }
+
+  const resetView = () => {
+    dragRef.current = null
+    setIsDragging(false)
+    setScale(1)
+    setPosition({ x: 0, y: 0 })
+  }
+
+  useEffect(() => {
+    dragRef.current = null
+    setIsDragging(false)
+    setScale(1)
+    setPosition({ x: 0, y: 0 })
+  }, [item.src])
+
+  const handleWheel = (event) => {
+    event.preventDefault()
+
+    const canvas = canvasRef.current
+    if (!canvas) return
+
+    const nextScale = Math.max(1, Math.min(5, scale * Math.exp(-event.deltaY * 0.0015)))
+    if (Math.abs(nextScale - scale) < 0.001) return
+
+    const bounds = canvas.getBoundingClientRect()
+    const pointer = {
+      x: event.clientX - bounds.left - bounds.width / 2,
+      y: event.clientY - bounds.top - bounds.height / 2,
+    }
+    const ratio = nextScale / scale
+    const nextPosition = {
+      x: pointer.x - (pointer.x - position.x) * ratio,
+      y: pointer.y - (pointer.y - position.y) * ratio,
+    }
+
+    setScale(nextScale)
+    setPosition(clampPosition(nextPosition, nextScale))
+  }
+
+  const handlePointerDown = (event) => {
+    if (event.button !== 0 || scale <= 1) return
+
+    event.preventDefault()
+    event.currentTarget.setPointerCapture(event.pointerId)
+    dragRef.current = {
+      pointerId: event.pointerId,
+      startX: event.clientX,
+      startY: event.clientY,
+      originX: position.x,
+      originY: position.y,
+    }
+    setIsDragging(true)
+  }
+
+  const handlePointerMove = (event) => {
+    const drag = dragRef.current
+    if (!drag || drag.pointerId !== event.pointerId) return
+
+    setPosition(clampPosition({
+      x: drag.originX + event.clientX - drag.startX,
+      y: drag.originY + event.clientY - drag.startY,
+    }, scale))
+  }
+
+  const endDrag = (event) => {
+    if (dragRef.current?.pointerId !== event.pointerId) return
+
+    if (event.currentTarget.hasPointerCapture(event.pointerId)) {
+      event.currentTarget.releasePointerCapture(event.pointerId)
+    }
+    dragRef.current = null
+    setIsDragging(false)
+  }
+
+  return (
+    <div
+      ref={canvasRef}
+      className={`image-preview-canvas${scale > 1 ? ' is-zoomed' : ''}${isDragging ? ' is-dragging' : ''}`}
+      onWheel={handleWheel}
+      onPointerDown={handlePointerDown}
+      onPointerMove={handlePointerMove}
+      onPointerUp={endDrag}
+      onPointerCancel={endDrag}
+      onDoubleClick={resetView}
+    >
+      <img
+        ref={imageRef}
+        src={item.src}
+        alt={item.title}
+        draggable="false"
+        style={{ transform: `translate3d(${position.x}px, ${position.y}px, 0) scale(${scale})` }}
+      />
+      <span className="image-preview-help">滚轮缩放 · 左键拖动 · 双击复位</span>
+      <span className="image-preview-zoom">{Math.round(scale * 100)}%</span>
     </div>
   )
 }
@@ -484,6 +603,7 @@ export default function App() {
   const previewIndex = imagePreview?.index ?? 0
   const currentPreview = previewItems[previewIndex]
   const canSwitchPreview = previewItems.length > 1
+  const isImagePreviewOpen = Boolean(imagePreview)
 
   const openImagePreview = (item, items = [item]) => {
     const list = items.length ? items : [item]
@@ -511,7 +631,8 @@ export default function App() {
       const heroSection = document.getElementById('top')
       if (!heroSection) return
 
-      setNavCompact(heroSection.getBoundingClientRect().bottom <= 96)
+      const compactThreshold = Math.max(heroSection.offsetHeight - 180, window.innerHeight * 0.72)
+      setNavCompact(window.scrollY >= compactThreshold)
     }
 
     handleScroll()
@@ -559,6 +680,42 @@ export default function App() {
       window.removeEventListener('keydown', handleKeydown)
     }
   }, [projectMediaModal, imagePreview])
+
+  useEffect(() => {
+    if (!isImagePreviewOpen) return undefined
+
+    const body = document.body
+    const root = document.documentElement
+    const previousBodyOverflow = body.style.overflow
+    const previousBodyPaddingRight = body.style.paddingRight
+    const previousRootOverflow = root.style.overflow
+    const previousOverscrollBehavior = root.style.overscrollBehavior
+    const scrollbarWidth = window.innerWidth - root.clientWidth
+
+    body.style.overflow = 'hidden'
+    root.style.overflow = 'hidden'
+    root.style.overscrollBehavior = 'none'
+
+    if (scrollbarWidth > 0) {
+      body.style.paddingRight = `${scrollbarWidth}px`
+    }
+
+    const preventBackgroundScroll = (event) => {
+      event.preventDefault()
+    }
+
+    window.addEventListener('wheel', preventBackgroundScroll, { passive: false })
+    window.addEventListener('touchmove', preventBackgroundScroll, { passive: false })
+
+    return () => {
+      window.removeEventListener('wheel', preventBackgroundScroll)
+      window.removeEventListener('touchmove', preventBackgroundScroll)
+      body.style.overflow = previousBodyOverflow
+      body.style.paddingRight = previousBodyPaddingRight
+      root.style.overflow = previousRootOverflow
+      root.style.overscrollBehavior = previousOverscrollBehavior
+    }
+  }, [isImagePreviewOpen])
 
   return (
     <div className="page-shell">
@@ -665,15 +822,12 @@ export default function App() {
               <PortfolioCard className="about-card motion-card" variant="default">
                 <div className="about-copy">
                   <p className="mini-label">About Me</p>
-                  <h2>环境设计本科在读，专注空间表达、设计逻辑与 AI 工具融合。</h2>
+                  <h2>以空间为媒介，连接设计逻辑、视觉表达与 AIGC 创作。</h2>
                   <p>
-                    我目前就读于潍坊学院环境设计专业，具备扎实的专业理论基础与实践能力，熟悉
-                    CAD、3Dmax、V-Ray、Photoshop，也在主动将 Stable Diffusion、ComfyUI、Codex
-                    融入设计流程。
+                    我就读于潍坊学院环境设计专业，系统学习室内设计、景观规划、建筑设计与施工工艺，熟练掌握 AutoCAD、3DMax 和 Photoshop以及AIGC工具，能够完成二维制图、三维效果呈现、图像后期、方案排版与视频演示。
                   </p>
                   <p>
-                    我关注空间从概念到落地的完整路径，擅长在细节控制、视觉表达和沟通协作之间找到平衡，
-                    也希望通过更多实践项目持续提升自己的设计判断与执行力。
+                    我关注空间从前期分析、概念推演到视觉呈现与方案落地的完整过程，也将 AIGC 作为辅助设计判断和提升效率的方法。曾在校园文化墙项目中完成资料分析、主题提炼、提示词优化与视觉控制，将项目周期压缩至原来的一半，并在实践中持续提升空间判断、执行效率与协作能力。
                   </p>
                 </div>
 
@@ -735,7 +889,7 @@ export default function App() {
             <SectionHeader
               index="02"
               title="精选项目"
-              description="首版先用高质感占位视觉承载内容结构，后续可替换为你的真实作品图。"
+              description="从空间改造、室内设计到 AIGC 概念表达，呈现我对场所、体验与视觉叙事的持续探索。"
             />
 
             <div className="projects-grid">
@@ -902,10 +1056,11 @@ export default function App() {
           <div className="container contact-layout">
             <div className="contact-copy">
               <p className="eyebrow">LET'S BUILD SOMETHING PRECISE</p>
-              <h2>如果你正在寻找一位兼具空间审美、执行意识与 AI 设计理解的合作对象，我们可以聊聊。</h2>
+              <h2 className="contact-display-title">
+                让空间设计与 <span className="contact-heading-latin">AIGC</span> 协同工作，把创意转化为清晰、完整的设计成果。
+              </h2>
               <p>
-                目前可沟通实习机会、设计合作与作品集完善方向。这个首版网站已经为后续加入真实项目图、
-                页面动效和案例详情预留好了结构。
+                目前正在寻找公共空间设计以及 AIGC 设计相关实习机会，期待在真实项目中发挥设计表达、方案执行与 AI 辅助创作能力。
               </p>
             </div>
 
@@ -1020,7 +1175,7 @@ export default function App() {
                   ‹
                 </button>
               ) : null}
-              <img src={currentPreview.src} alt={currentPreview.title} />
+              <ZoomablePreviewImage key={currentPreview.src} item={currentPreview} />
               {canSwitchPreview ? (
                 <button
                   type="button"

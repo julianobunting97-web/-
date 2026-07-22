@@ -1,3 +1,11 @@
+@font-face {
+  font-family: 'Anurati';
+  src: url('/fonts/Anurati-Regular.otf') format('opentype');
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+
 :root {
   color-scheme: dark;
   --bg: #060304;
@@ -60,7 +68,6 @@ img {
 .page-shell {
   position: relative;
   overflow: hidden;
-  perspective: 1600px;
 }
 
 .page-shell::before {
@@ -94,7 +101,7 @@ img {
 }
 
 .floating-nav.is-compact {
-  top: 10px;
+  top: 8px;
 }
 
 .nav-surface {
@@ -120,6 +127,8 @@ img {
     inset 0 -1px 0 rgba(255, 255, 255, 0.04);
   pointer-events: auto;
   transform: translateY(0) scale(1);
+  transform-origin: top center;
+  will-change: width, min-height, padding, transform;
   transition:
     min-height 520ms cubic-bezier(0.16, 1, 0.3, 1),
     padding 520ms cubic-bezier(0.16, 1, 0.3, 1),
@@ -228,10 +237,10 @@ img {
 }
 
 .nav-surface.is-compact {
-  min-height: 54px;
-  padding: 8px 16px;
-  border-radius: 24px;
-  width: min(calc(100% - 96px), 1180px);
+  min-height: 50px;
+  padding: 6px 14px;
+  border-radius: 22px;
+  width: min(calc(100% - 96px), 1080px);
   border-color: rgba(255, 255, 255, 0.24);
   background:
     linear-gradient(180deg, rgba(255, 255, 255, 0.22), rgba(255, 255, 255, 0.075)),
@@ -243,7 +252,7 @@ img {
     0 18px 54px rgba(0, 0, 0, 0.34),
     inset 0 1px 0 rgba(255, 255, 255, 0.3),
     inset 0 -1px 0 rgba(255, 255, 255, 0.09);
-  transform: translateY(-2px) scale(0.96);
+  transform: translateY(-3px) scale(0.96);
 }
 
 .nav-surface.is-compact::before {
@@ -478,21 +487,19 @@ img {
 }
 
 .hero-title-en {
-  font-family: 'Press Start 2P', monospace;
-  font-size: clamp(2.8rem, 6.2vw, 5.4rem);
-  line-height: 1.08;
-  letter-spacing: 0.24em;
+  font-family: 'Anurati', sans-serif;
+  font-size: clamp(3.4rem, 7.6vw, 7.2rem);
+  line-height: 0.92;
+  letter-spacing: 0.14em;
   font-weight: 400;
-  text-indent: 0.24em;
+  font-synthesis: none;
+  text-indent: 0.14em;
   color: #ff7b00;
   text-shadow:
-    0 0 0 #ff7b00,
-    2px 0 0 rgba(255, 123, 0, 0.88),
-    -2px 0 0 rgba(255, 123, 0, 0.88),
-    0 2px 0 rgba(255, 123, 0, 0.78),
-    0 -2px 0 rgba(255, 123, 0, 0.78),
-    0 0 20px rgba(255, 123, 0, 0.12);
-  filter: brightness(112%) contrast(122%);
+    0 0 26px rgba(255, 123, 0, 0.16),
+    0 8px 38px rgba(0, 0, 0, 0.38);
+  filter: brightness(108%) contrast(112%);
+  -webkit-font-smoothing: antialiased;
 }
 
 .hero-caption {
@@ -639,6 +646,7 @@ img {
 .section {
   position: relative;
   padding: 120px 0;
+  perspective: 1600px;
   overflow: clip;
 }
 
@@ -672,6 +680,10 @@ img {
   color: rgba(236, 242, 247, 0.92);
   position: relative;
   z-index: 1;
+}
+
+#projects .section-description {
+  max-width: none;
 }
 
 .section-display {
@@ -1672,29 +1684,87 @@ img {
 
 .image-preview-frame {
   position: relative;
-  min-height: 0;
+  width: 100%;
+  height: min(62vh, 680px);
+  min-height: 320px;
   display: flex;
   align-items: center;
   justify-content: center;
-  overflow: auto;
+  overflow: hidden;
+  touch-action: none;
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 20px;
   background: rgba(0, 0, 0, 0.32);
 }
 
-.image-preview-frame img {
+.image-preview-canvas {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  cursor: zoom-in;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.image-preview-canvas.is-zoomed {
+  cursor: grab;
+}
+
+.image-preview-canvas.is-dragging {
+  cursor: grabbing;
+}
+
+.image-preview-canvas img {
   display: block;
   max-width: 100%;
   max-height: 62vh;
   width: auto;
   height: auto;
   object-fit: contain;
+  pointer-events: none;
+  transform-origin: center;
+  will-change: transform;
+  transition: transform 120ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.image-preview-canvas.is-dragging img {
+  transition: none;
+}
+
+.image-preview-help,
+.image-preview-zoom {
+  position: absolute;
+  z-index: 2;
+  min-height: 30px;
+  padding: 6px 12px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 999px;
+  background: rgba(10, 8, 9, 0.58);
+  color: rgba(248, 239, 239, 0.72);
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  pointer-events: none;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.image-preview-help {
+  left: 14px;
+  bottom: 14px;
+}
+
+.image-preview-zoom {
+  top: 14px;
+  right: 14px;
 }
 
 .image-preview-nav {
   position: absolute;
   top: 50%;
-  z-index: 2;
+  z-index: 4;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -1732,7 +1802,7 @@ img {
   position: absolute;
   left: 50%;
   bottom: 14px;
-  z-index: 2;
+  z-index: 4;
   min-height: 30px;
   padding: 6px 12px;
   border: 1px solid rgba(255, 255, 255, 0.14);
@@ -1839,11 +1909,30 @@ img {
 }
 
 .contact-copy h2 {
-  max-width: 980px;
-  margin: 18px 0 18px;
-  font-size: clamp(2.4rem, 4vw, 4.6rem);
-  line-height: 1.1;
-  letter-spacing: -0.04em;
+  max-width: 1020px;
+  margin: 24px 0 24px;
+  font-family: FangSong, STFangsong, 'Songti SC', 'Noto Serif SC', serif;
+  font-size: clamp(2.35rem, 3.8vw, 4.45rem);
+  font-weight: 400;
+  line-height: 1.3;
+  letter-spacing: 0.045em;
+  color: #f4eee8;
+  text-wrap: balance;
+  font-kerning: normal;
+  font-feature-settings: 'palt' 1;
+  text-shadow: 0 16px 46px rgba(0, 0, 0, 0.36);
+  -webkit-font-smoothing: antialiased;
+}
+
+.contact-heading-latin {
+  display: inline-block;
+  margin-inline: 0.05em;
+  font-family: 'Anurati', sans-serif;
+  font-size: 0.76em;
+  line-height: 1;
+  letter-spacing: 0.12em;
+  text-indent: 0.12em;
+  vertical-align: 0.05em;
 }
 
 .contact-copy p:last-child {
@@ -2116,9 +2205,9 @@ img {
   }
 
   .hero-title-en {
-    font-size: clamp(1.45rem, 7.4vw, 2.4rem);
-    letter-spacing: 0.12em;
-    text-indent: 0.12em;
+    font-size: clamp(2rem, 10.4vw, 3.4rem);
+    letter-spacing: 0.1em;
+    text-indent: 0.1em;
   }
 
   .hero-actions,
@@ -2200,6 +2289,18 @@ img {
 
   .image-preview-head {
     gap: 12px;
+  }
+
+  .image-preview-frame {
+    height: min(58vh, 560px);
+    min-height: 260px;
+  }
+
+  .image-preview-help {
+    max-width: calc(100% - 96px);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
   .project-media-grid {
