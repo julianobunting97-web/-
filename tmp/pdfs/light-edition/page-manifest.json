@@ -1,0 +1,235 @@
+[
+  {
+    "page": 1,
+    "chapter": "Environmental Art & Spatial Design",
+    "title": null,
+    "images": [
+      "public\\portfolio\\1532-park\\renders\\render-11.jpeg"
+    ]
+  },
+  {
+    "page": 2,
+    "chapter": "Profile / Education & Recognition",
+    "title": "以空间为媒介，连接设计与创作。",
+    "images": [
+      "src\\assets\\portrait-cao-shuo.png"
+    ]
+  },
+  {
+    "page": 3,
+    "chapter": "Index / Selected Projects",
+    "title": "精选项目",
+    "images": [
+      "public\\portfolio\\1532-park\\renders\\render-11.jpeg",
+      "public\\portfolio\\1532-office\\renders\\render-07.png",
+      "public\\portfolio\\concept-space\\renders\\render-08.png",
+      "public\\portfolio\\family-home\\renders\\render-01.jpeg",
+      "public\\portfolio\\single-apartment\\renders\\render-01.png",
+      "public\\portfolio\\courtyard\\renders\\render-02.jpeg"
+    ]
+  },
+  {
+    "page": 4,
+    "chapter": "01 / URBAN LANDSCAPE",
+    "title": null,
+    "images": [
+      "public\\portfolio\\1532-park\\renders\\render-01.jpeg"
+    ]
+  },
+  {
+    "page": 5,
+    "chapter": "01 / Context & Strategy",
+    "title": "从工业记忆，到社区日常",
+    "images": [
+      "public\\portfolio\\1532-park\\boards\\board-01.jpg"
+    ]
+  },
+  {
+    "page": 6,
+    "chapter": "01 / Landscape Systems",
+    "title": "让生态策略进入空间剖面",
+    "images": [
+      "public\\portfolio\\1532-park\\boards\\board-02.jpg"
+    ]
+  },
+  {
+    "page": 7,
+    "chapter": "01 / Place & Detail",
+    "title": "入口，是进入场所的第一段叙事",
+    "images": [
+      "public\\portfolio\\1532-park\\renders\\render-02.png",
+      "public\\portfolio\\1532-park\\renders\\render-03.jpeg",
+      "public\\portfolio\\1532-park\\renders\\render-04.jpeg"
+    ]
+  },
+  {
+    "page": 8,
+    "chapter": "01 / Social Landscape",
+    "title": "从白昼到夜晚，延续公共生活",
+    "images": [
+      "public\\portfolio\\1532-park\\renders\\render-07.png",
+      "public\\portfolio\\1532-park\\renders\\render-08.jpeg",
+      "public\\portfolio\\1532-park\\renders\\render-05.jpeg"
+    ]
+  },
+  {
+    "page": 9,
+    "chapter": "02 / WORKPLACE DESIGN",
+    "title": null,
+    "images": [
+      "public\\portfolio\\1532-office\\renders\\render-07.png"
+    ]
+  },
+  {
+    "page": 10,
+    "chapter": "02 / Plan & Programme",
+    "title": "用空间关系，回应不同的工作状态",
+    "images": [
+      "public\\portfolio\\1532-office\\boards\\board-01.jpg",
+      "public\\portfolio\\1532-office\\boards\\board-01.jpg",
+      "public\\portfolio\\1532-office\\boards\\board-01.jpg"
+    ]
+  },
+  {
+    "page": 11,
+    "chapter": "02 / Open Collaboration",
+    "title": "协作，从开放的公共界面开始",
+    "images": [
+      "public\\portfolio\\1532-office\\renders\\render-10.png",
+      "public\\portfolio\\1532-office\\renders\\render-02.png"
+    ]
+  },
+  {
+    "page": 12,
+    "chapter": "02 / Day & Night",
+    "title": "光线，让同一空间拥有不同节奏",
+    "images": [
+      "public\\portfolio\\1532-office\\renders\\render-03.png",
+      "public\\portfolio\\1532-office\\renders\\render-04.png"
+    ]
+  },
+  {
+    "page": 13,
+    "chapter": "02 / Work, Talk & Pause",
+    "title": "不同尺度的交流，与专注并存",
+    "images": [
+      "public\\portfolio\\1532-office\\renders\\render-06.jpeg",
+      "public\\portfolio\\1532-office\\renders\\render-12.jpg",
+      "public\\portfolio\\1532-office\\renders\\render-14.png"
+    ]
+  },
+  {
+    "page": 14,
+    "chapter": "03 / AIGC CONCEPT SPACE",
+    "title": null,
+    "images": [
+      "public\\portfolio\\concept-space\\renders\\render-08.png"
+    ]
+  },
+  {
+    "page": 15,
+    "chapter": "03 / Form & Nature",
+    "title": "让自然意象，成为空间语言",
+    "images": [
+      "public\\portfolio\\concept-space\\renders\\render-05.png",
+      "public\\portfolio\\concept-space\\renders\\render-06.png"
+    ]
+  },
+  {
+    "page": 16,
+    "chapter": "03 / Immersive Interior",
+    "title": "以光、水与曲面，组织沉浸式观看",
+    "images": [
+      "public\\portfolio\\concept-space\\renders\\render-03.jpg",
+      "public\\portfolio\\concept-space\\renders\\render-04.png"
+    ]
+  },
+  {
+    "page": 17,
+    "chapter": "03 / Material & Atmosphere",
+    "title": "从建筑尺度，走近材料与感知",
+    "images": [
+      "public\\portfolio\\concept-space\\renders\\render-07.png",
+      "public\\portfolio\\concept-space\\renders\\render-11.png",
+      "public\\portfolio\\concept-space\\renders\\render-12.png"
+    ]
+  },
+  {
+    "page": 18,
+    "chapter": "04 / FAMILY HOME",
+    "title": null,
+    "images": [
+      "public\\portfolio\\family-home\\renders\\render-01.jpeg"
+    ]
+  },
+  {
+    "page": 19,
+    "chapter": "04 / Everyday Living",
+    "title": "让日常功能，拥有统一的温度",
+    "images": [
+      "public\\portfolio\\family-home\\renders\\render-02.jpeg",
+      "public\\portfolio\\family-home\\renders\\render-04.png",
+      "public\\portfolio\\family-home\\renders\\render-03.png"
+    ]
+  },
+  {
+    "page": 20,
+    "chapter": "05 / COMPACT APARTMENT",
+    "title": null,
+    "images": [
+      "public\\portfolio\\single-apartment\\renders\\render-01.png"
+    ]
+  },
+  {
+    "page": 21,
+    "chapter": "05 / Function & Rhythm",
+    "title": "把生活功能，组织成连续的空间",
+    "images": [
+      "public\\portfolio\\single-apartment\\renders\\render-02.jpeg",
+      "public\\portfolio\\single-apartment\\renders\\render-03.jpeg"
+    ]
+  },
+  {
+    "page": 22,
+    "chapter": "05 / Lived Atmosphere",
+    "title": "让人物尺度，回到空间之中",
+    "images": [
+      "public\\portfolio\\single-apartment\\renders\\photo-kitchen-01.png",
+      "public\\portfolio\\single-apartment\\renders\\photo-living-02.png",
+      "public\\portfolio\\single-apartment\\renders\\photo-living-04.png",
+      "public\\portfolio\\single-apartment\\renders\\photo-gaming-01.png"
+    ]
+  },
+  {
+    "page": 23,
+    "chapter": "06 / COURTYARD LANDSCAPE",
+    "title": null,
+    "images": [
+      "public\\portfolio\\courtyard\\renders\\render-02.jpeg"
+    ]
+  },
+  {
+    "page": 24,
+    "chapter": "06 / Arrival & Pause",
+    "title": "在行走与停留之间，建立庭院层次",
+    "images": [
+      "public\\portfolio\\courtyard\\renders\\render-01.jpeg",
+      "public\\portfolio\\courtyard\\renders\\render-03.jpeg",
+      "public\\portfolio\\courtyard\\renders\\render-04.jpeg"
+    ]
+  },
+  {
+    "page": 25,
+    "chapter": "Practice / Design & AIGC",
+    "title": "以设计判断，连接工具与成果",
+    "images": []
+  },
+  {
+    "page": 26,
+    "chapter": "Contact / Available for Internship",
+    "title": null,
+    "images": [
+      "public\\portfolio\\1532-park\\renders\\render-09.jpeg"
+    ]
+  }
+]

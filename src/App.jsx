@@ -6,7 +6,7 @@ import ProfileCard from './components/ProfileCard'
 import { ProceduralVideoBackground } from './components/ProceduralVideoBackground'
 import portraitCaoShuo from './assets/portrait-cao-shuo.png'
 
-const contactEmail = 'julianobunting97@gmail.com'
+const contactEmail = 'fengfan3812@gmail.com'
 const gmailComposeUrl = 'https://mail.google.com/mail/?view=cm&fs=1&to=' + contactEmail
 
 const navigation = [
@@ -19,8 +19,8 @@ const navigation = [
 
 const profileStats = [
   { value: '3.86 / 4.0', label: 'GPA' },
-  { value: '2 / 40', label: '学年成绩排名' },
-  { value: '7 / 40', label: '学年综测排名' },
+  { value: '3 / 80', label: '学年成绩排名' },
+  { value: '7 / 80', label: '学年综测排名' },
   { value: '10+', label: '设计与 AI 工具' },
 ]
 
@@ -33,7 +33,7 @@ const profileDetails = [
 
 const heroPosterMetrics = [
   { value: '3.86', label: 'GPA' },
-  { value: '2/40', label: '专业排名' },
+  { value: '3/80', label: '专业排名' },
   { value: '2027', label: '毕业时间' },
 ]
 
@@ -254,6 +254,7 @@ const strengths = [
 ]
 
 const honors = [
+  '第十二届“广联达杯”BIM毕业设计创新大赛 B模块建筑设计AI+BIM应用与创新项目大赛“一等奖”',
   '普通话二级甲等',
   '2024 学年暑期“三下乡”社会实践优秀个人',
   '2023-2024 学年潍坊学院三等奖学金',
@@ -824,7 +825,7 @@ export default function App() {
                   <p className="mini-label">About Me</p>
                   <h2>以空间为媒介，连接设计逻辑、视觉表达与 AIGC 创作。</h2>
                   <p>
-                    我就读于潍坊学院环境设计专业，系统学习室内设计、景观规划、建筑设计与施工工艺，熟练掌握 AutoCAD、3DMax 和 Photoshop以及AIGC工具，能够完成二维制图、三维效果呈现、图像后期、方案排版与视频演示。
+                    我就读于潍坊学院环境设计专业，系统学习室内设计、景观规划、建筑设计与施工工艺，熟练掌握 AutoCAD、3DMax 和 Photoshop以及GPT/codex、Gemini、ComfyUI等AI设计工具，能够完成二维制图、三维效果呈现、图像后期、方案排版与视频演示。
                   </p>
                   <p>
                     我关注空间从前期分析、概念推演到视觉呈现与方案落地的完整过程，也将 AIGC 作为辅助设计判断和提升效率的方法。曾在校园文化墙项目中完成资料分析、主题提炼、提示词优化与视觉控制，将项目周期压缩至原来的一半，并在实践中持续提升空间判断、执行效率与协作能力。
