@@ -27,9 +27,15 @@ review screenshots, dependencies, credentials, and temporary artifacts out of
 the published source. Obtain temporary credentials through the Sites connector
 and pass them only on stdin to the bundled workflow; never save them in files.
 
-The website builds and local interaction checks pass. Two Sites source-push
-attempts failed with HTTP 403. The last attempt ended on 2026-09-23 with the
-server message "Invalid or expired token" after a long upload. No save/deploy
-operation has run, and no hosted URL is verified. Local preview remains available
-at http://localhost:4173/. For a future publication retry, reuse the existing Site,
-obtain fresh credentials, and let the workflow reconcile the remote source state.
+The mobile-optimized site was published privately on 2026-09-23:
+https://cao-shuo-spatial-portfolio.julianobunting97.chatgpt.site
+The published Sites source commit is `cc511e30d98086813bc8aea04924b321a752503f`.
+Deployment `appgdep_6ab3a63f08bc8191bb3b3cf293e587fe` succeeded. Mobile checks
+passed at 390, 360, and 320 CSS pixels; desktop and gallery interaction checks
+also passed. Local preview remains available at http://localhost:4173/.
+
+The 117 MB local archive upload timed out, so publication used the existing
+remote source and Sites remote build. Keep `package-lock.json` resolved URLs on
+the official npm registry; the mirror URLs caused a failed remote build. For
+future updates, reuse the existing Site and release checkout, push the exact
+source commit, then publish a new private version and verify deployment status.
