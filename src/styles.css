@@ -7,20 +7,21 @@
 }
 
 :root {
-  color-scheme: dark;
-  --bg: #060304;
-  --bg-soft: #151012;
-  --surface: rgba(21, 12, 14, 0.72);
-  --surface-strong: rgba(19, 9, 11, 0.92);
-  --line: rgba(255, 255, 255, 0.09);
-  --line-strong: rgba(255, 255, 255, 0.18);
-  --text: #f8efef;
-  --muted: #b99da0;
-  --accent: #ff5a3d;
-  --accent-strong: #ff2f17;
-  --accent-soft: rgba(255, 90, 61, 0.22);
-  --accent-warm: #ff8f63;
-  --shadow: 0 30px 120px rgba(0, 0, 0, 0.52);
+  color-scheme: light;
+  --bg: #f5f3ed;
+  --bg-soft: #e9e9e0;
+  --surface: #fbfaf6;
+  --surface-strong: #fffefa;
+  --line: rgba(43, 55, 44, 0.16);
+  --line-strong: rgba(43, 55, 44, 0.32);
+  --text: #26352b;
+  --muted: #697167;
+  --accent: #536b53;
+  --accent-strong: #354c3b;
+  --accent-soft: rgba(83, 107, 83, 0.09);
+  --accent-warm: #a4ad95;
+  --shadow: 0 14px 42px rgba(47, 58, 41, 0.055);
+  --font-editorial: 'Noto Serif SC', 'Songti SC', 'STSong', 'SimSun', serif;
   --container: 1700px;
 }
 
@@ -773,9 +774,9 @@ img {
   background: rgba(255, 255, 255, 0.025);
 }
 
-.detail-grid span,
-.contact-strip span,
-.stat-card span,
+.detail-card > .border-glow-inner > span,
+.contact-strip-card > .border-glow-inner > span,
+.stat-card > .border-glow-inner > span,
 .contact-row span {
   display: block;
   color: rgba(236, 242, 247, 0.52);
@@ -818,12 +819,13 @@ img {
   overflow-wrap: anywhere;
 }
 
-.detail-card strong,
-.contact-strip-card strong,
-.stat-card strong,
-.detail-card span,
-.contact-strip-card span,
-.stat-card span {
+/* Limit text only; the glow layer extends beyond the card's bounds. */
+.detail-card > .border-glow-inner > strong,
+.contact-strip-card > .border-glow-inner > strong,
+.stat-card > .border-glow-inner > strong,
+.detail-card > .border-glow-inner > span,
+.contact-strip-card > .border-glow-inner > span,
+.stat-card > .border-glow-inner > span {
   max-width: 100%;
 }
 
@@ -925,6 +927,10 @@ img {
   background: transparent;
 }
 
+.project-board-item {
+  cursor: pointer;
+}
+
 .project-detail-board {
   cursor: pointer;
 }
@@ -970,7 +976,7 @@ img {
 }
 
 .project-board-item:hover .project-board-open,
-.project-board-item:focus-within .project-board-open,
+.project-board-item:focus-visible .project-board-open,
 .project-detail-board:hover span,
 .project-detail-board:focus-visible span {
   opacity: 1;
@@ -978,7 +984,7 @@ img {
 }
 
 .project-board-open:hover,
-.project-board-open:focus-visible,
+.project-board-item:focus-visible .project-board-open,
 .project-detail-board:hover span,
 .project-detail-board:focus-visible span {
   border-color: rgba(255, 152, 84, 0.58);
@@ -1749,6 +1755,15 @@ img {
   pointer-events: none;
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
+}
+
+.image-preview-zoom {
+  cursor: pointer;
+  pointer-events: auto;
+}
+
+.image-preview-help-touch {
+  display: none;
 }
 
 .image-preview-help {

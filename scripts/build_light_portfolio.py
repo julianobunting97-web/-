@@ -8,6 +8,7 @@ from pathlib import Path
 import sys
 
 from PIL import Image, ImageDraw, ImageFont, ImageOps
+from reportlab import rl_config
 from reportlab.lib.colors import HexColor
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
@@ -17,11 +18,12 @@ from reportlab.platypus import Paragraph
 from reportlab.graphics.barcode.qr import QrCodeWidget
 from reportlab.graphics.shapes import Drawing
 from reportlab.graphics import renderPDF
+from cover_axonometric import draw_cover_axonometric, draw_closing_axonometric
 
 ROOT = Path(__file__).resolve().parents[1]
 PUBLIC = ROOT / 'public' / 'portfolio'
 WORK = ROOT / 'tmp' / 'pdfs' / 'light-edition'
-OUT = ROOT / 'output' / 'pdf' / '曹硕_环境艺术设计作品集_16比9_浅色求职版_更新.pdf'
+OUT = ROOT / 'output' / 'pdf' / '曹硕_环境艺术设计作品集_16比9_浅色求职版_含展板.pdf'
 W, H = 1280, 720
 BG = '#F5F3ED'
 INK = '#252D29'
@@ -35,6 +37,8 @@ PHONE = '133 6144 4417'
 VIDEO_PARK = 'https://www.bilibili.com/video/BV1nRMh6LEZs?t=1.4'
 VIDEO_OCEAN = 'https://www.bilibili.com/video/BV1pXMh62EA9?t=37.1'
 Image.MAX_IMAGE_PIXELS = 200_000_000
+# Keep JPEG streams binary; ASCII85 adds size without improving image fidelity.
+rl_config.useA85 = False
 
 
 def asset(slug, number):
@@ -61,11 +65,54 @@ def audit_assets():
     print('Asset contact sheets ready', flush=True)
 
 
+def anurati_pdf_font():
+    source = ROOT / 'public/fonts/Anurati-Regular.otf'
+    digest = hashlib.sha256(source.read_bytes()).hexdigest()[:12]
+    target = ROOT / '.codex-build/pdf-fonts' / f'Anurati-{digest}.ttf'
+    if target.exists():
+        return target
+
+    # ReportLab needs quadratic outlines; retain the site's glyphs and font metadata.
+    sys.path.insert(0, str(ROOT / '.codex-build/pdf-python'))
+    from fontTools.ttLib import TTFont as SourceFont
+    from fontTools.fontBuilder import FontBuilder
+    from fontTools.pens.cu2quPen import Cu2QuPen
+    from fontTools.pens.ttGlyphPen import TTGlyphPen
+
+    with SourceFont(source) as font:
+        order = font.getGlyphOrder()
+        glyph_set = font.getGlyphSet()
+        glyphs = {}
+        for name in order:
+            pen = TTGlyphPen(glyph_set)
+            glyph_set[name].draw(Cu2QuPen(pen, max_err=1, reverse_direction=True))
+            glyphs[name] = pen.glyph()
+        builder = FontBuilder(font['head'].unitsPerEm, isTTF=True)
+        builder.setupGlyphOrder(order)
+        builder.setupCharacterMap(font.getBestCmap())
+        builder.setupGlyf(glyphs)
+        builder.setupHorizontalMetrics(font['hmtx'].metrics)
+        builder.setupHorizontalHeader(ascent=font['hhea'].ascent,
+                                      descent=font['hhea'].descent,
+                                      lineGap=font['hhea'].lineGap)
+        builder.font['name'] = font['name']
+        os2 = font['OS/2']
+        builder.setupOS2(sTypoAscender=os2.sTypoAscender, sTypoDescender=os2.sTypoDescender,
+                         sTypoLineGap=os2.sTypoLineGap, usWinAscent=os2.usWinAscent,
+                         usWinDescent=os2.usWinDescent, fsType=os2.fsType,
+                         usWeightClass=os2.usWeightClass, usWidthClass=os2.usWidthClass)
+        builder.setupPost()
+        target.parent.mkdir(parents=True, exist_ok=True)
+        builder.save(target)
+    return target
+
+
 def register_fonts():
     for name, filename in [('Sans', 'msyh.ttc'), ('Bold', 'msyhbd.ttc'),
                            ('Serif', 'NotoSerifSC-VF.ttf'), ('Latin', 'calibri.ttf'),
                            ('LatinLight', 'calibril.ttf')]:
         pdfmetrics.registerFont(TTFont(name, 'C:/Windows/Fonts/' + filename))
+    pdfmetrics.registerFont(TTFont('Anurati', str(anurati_pdf_font())))
 
 
 class Book:
@@ -119,9 +166,11 @@ class Book:
         self.boxes.append((self.page, value[:36], x, y, x+width, y+height))
         return height
 
-    def image(self, path, x, y, w, h, mode='cover', crop=None, anchor=(.5, .5)):
+    def image(self, path, x, y, w, h, mode='cover', crop=None, anchor=(.5, .5), pixel_ratio=2.25):
         path = Path(path)
         spec = f'{path}|{path.stat().st_mtime}|{w}|{h}|{mode}|{crop}|{anchor}'
+        if pixel_ratio != 2.25:
+            spec += f'|{pixel_ratio}|q91'
         dest = WORK / ('img-' + hashlib.sha1(spec.encode()).hexdigest()[:18] + '.jpg')
         if not dest.exists():
             with Image.open(path) as original:
@@ -136,7 +185,7 @@ class Book:
                 if crop:
                     a,b,c,d = crop
                     im = im.crop((int(a*im.width), int(b*im.height), int(c*im.width), int(d*im.height)))
-                target = (max(1, int(w*2.25)), max(1, int(h*2.25)))
+                target = (max(1, int(w*pixel_ratio)), max(1, int(h*pixel_ratio)))
                 if mode == 'cover':
                     im = ImageOps.fit(im, target, Image.Resampling.LANCZOS, centering=anchor)
                 else:
@@ -150,6 +199,32 @@ class Book:
             x, y, w, h = x+(w-dw)/2, y+(h-dh)/2, dw, dh
         self.c.drawImage(str(dest), x, H-y-h, w, h)
         self.manifest[-1]['images'].append(str(path.relative_to(ROOT)))
+
+    def compressed_image(self, path, x, y, w, h):
+        path = Path(path)
+        with Image.open(path) as im:
+            if im.format != 'JPEG' or abs(im.width/im.height-w/h) > .001:
+                raise ValueError('Precompressed image must be a JPEG matching the layout ratio')
+        # Embed the optimized JPEG stream directly, without another lossy encode.
+        self.c.drawImage(str(path), x, H-y-h, w, h)
+        self.manifest[-1]['images'].append(str(path.relative_to(ROOT)))
+
+    def boards(self, number, title, description, items, key):
+        self.begin(f'{number} / Original Presentation Boards')
+        self.c.bookmarkPage(key)
+        self.c.addOutlineEntry(title, key, level=1)
+        self.text(title, 52, 100, 34, 'Serif')
+        self.para(description, 52, 166, 252, 15, 27, MUTED, maxh=120)
+        self.line(52, 316, 292)
+        for i, (_, label, detail) in enumerate(items):
+            top = 346+i*90
+            self.text(label, 52, top, 17, 'Serif')
+            self.text(detail, 52, top+30, 12, 'Sans', MUTED)
+        self.text('完整展板 / 放大阅读细节', 52, 625, 11, 'Sans', MUTED)
+        for i, (path, label, _) in enumerate(items):
+            x = 350+i*450
+            self.image(path, x, 83, 428, 570, mode='contain', pixel_ratio=10)
+        self.manifest[-1]['full_boards'] = [str(item[0].relative_to(ROOT)) for item in items]
 
     def begin(self, chapter, title=None, subtitle=None, key=None):
         if self.page:
@@ -231,29 +306,29 @@ def build():
     court = lambda n: asset('courtyard', n)
     pb1 = PUBLIC / '1532-park/boards/board-01.jpg'
     pb2 = PUBLIC / '1532-park/boards/board-02.jpg'
+    pb3 = ROOT / 'output/pdf/source-assets/1532-park-board-03.jpg'
+    poster = PUBLIC / '1532-park-cover.jpg'
     ob1 = PUBLIC / '1532-office/boards/board-01.jpg'
+    ob2 = PUBLIC / '1532-office/boards/board-02.jpg'
 
-    # 01 / Cover: large image, quiet architectural typography.
+    # 01 / Cover: abstract vector architecture rather than a single project image.
     b.begin('Environmental Art & Spatial Design', key='cover')
-    b.text('PORTFOLIO', 48, 78, 110, 'LatinLight', INK, tracking=3)
+    b.text('PORTFOLIO', 48, 78, 110, 'Anurati', INK, tracking=15.4)
     b.text('2026', 1228, 121, 34, 'LatinLight', ACCENT, 'right')
     b.text('空间之间', 52, 231, 47, 'Serif')
     b.text('环境艺术设计作品集', 55, 303, 18, 'Sans', MUTED)
     b.line(54, 358, 335)
-    b.text('曹硕', 52, 383, 38, 'Serif')
-    b.text('CAO SHUO', 55, 441, 17, 'Latin', tracking=2.3)
-    b.para('公共空间 / 室内设计 / AIGC<br/>潍坊学院 · 环境设计本科', 55, 501, 295, 14, 28, MUTED)
-    b.text('以空间为媒介，连接逻辑与感知。', 55, 620, 13, 'Sans', ACCENT)
-    b.image(park(11), 399, 211, 829, 390)
-    b.cap('世纪绿洲  /  1532 产业园改造', 399, 619)
-    b.text('SELECTED PROJECTS  01 - 06', 1228, 623, 10, 'Latin', MUTED, 'right', 1)
+    b.para('公共空间<br/>室内设计<br/>AIGC', 55, 389, 280, 21, 36, INK)
+    b.para('以空间为媒介，<br/>连接逻辑与感知。', 55, 560, 280, 15, 27, ACCENT)
+    draw_cover_axonometric(b)
 
     # 02 / Profile. Award follows the website verbatim; no project attribution inferred.
     b.begin('Profile / Education & Recognition', '以空间为媒介，连接设计与创作。', key='profile')
     b.image(ROOT/'src/assets/portrait-cao-shuo.png', 52, 154, 194, 259, mode='contain')
-    b.text('曹硕', 52, 430, 32, 'Serif')
-    b.text('CAO SHUO', 53, 480, 15, 'Latin', MUTED, tracking=1.6)
-    b.para('环境设计本科在读<br/>潍坊学院<br/>预计 2027 年毕业', 53, 519, 207, 14, 27, MUTED)
+    b.text('曹硕', 149, 430, 32, 'Serif', align='center')
+    b.text('CAO SHUO', 149, 480, 15, 'Latin', MUTED, align='center', tracking=1.6)
+    for i, line in enumerate(['环境设计本科在读', '潍坊学院', '预计 2027 年毕业']):
+        b.text(line, 149, 519+i*27, 14, 'Sans', MUTED, align='center')
     b.text('设计表达 / 方案执行 / AI 辅助创作', 284, 158, 17, 'Bold')
     b.para('系统学习室内设计、景观规划、建筑设计与施工工艺，关注从前期分析、概念推演到视觉呈现与方案深化的完整过程。',
            284, 205, 440, 16, 28)
@@ -279,12 +354,12 @@ def build():
     # 03 / Contents with in-document navigation.
     b.begin('Index / Selected Projects','精选项目','从场地更新到居住日常，再到 AIGC 概念表达。',key='contents')
     contents = [
-        ('01','世纪绿洲','潍坊市 1532 产业园改造','景观更新','04 - 08',park(11),'park'),
-        ('02','LUMEN','1532 办公空间设计','室内改造','09 - 13',office(7),'office'),
-        ('03','海洋艺术与生态科技','概念展馆与沉浸式空间','AIGC 概念','14 - 17',ocean(8),'ocean'),
-        ('04','柔和的居住秩序','三口之家侘寂风住宅','住宅设计','18 - 19',family(1),'family'),
-        ('05','一人居所','单人公寓室内设计','小户型设计','20 - 22',apartment(1),'apartment'),
-        ('06','庭院有境','庭院景观设计','庭院营造','23 - 24',court(2),'courtyard'),
+        ('01','世纪绿洲','潍坊市 1532 产业园改造','景观更新','04 - 10',park(11),'park'),
+        ('02','LUMEN','1532 办公空间设计','室内改造','11 - 16',office(7),'office'),
+        ('03','海洋艺术与生态科技','概念展馆与沉浸式空间','AIGC 概念','17 - 20',ocean(8),'ocean'),
+        ('04','柔和的居住秩序','三口之家侘寂风住宅','住宅设计','21 - 22',family(1),'family'),
+        ('05','一人居所','单人公寓室内设计','小户型设计','23 - 25',apartment(1),'apartment'),
+        ('06','庭院有境','庭院景观设计','庭院营造','26 - 27',court(1),'courtyard'),
     ]
     for i,(num,title,sub,cat,pages,img,key) in enumerate(contents):
         x,y = 52+(i%3)*400, 177+(i//3)*234
@@ -296,7 +371,7 @@ def build():
         b.text(cat,x,y+201,10,'Sans',MUTED)
         b.c.linkRect('',key,(x,H-y-220,x+376,H-y),relative=0,thickness=0)
 
-    # 04-08 / Public landscape: setting, systems and lived experience.
+    # 04-10 / Public landscape: setting, systems and complete boards.
     b.opener('01',['世纪绿洲','重塑时间的维度'],'URBAN LANDSCAPE',
              '潍坊市 1532 产业园改造项目',
              '以工业记忆、时间叙事、社区共生与生态疗愈为线索，将存量场地转化为可停留、可感知的公共空间。',
@@ -333,14 +408,21 @@ def build():
 
     b.begin('01 / Social Landscape','从白昼到夜晚，延续公共生活',
             '社区休憩、生态草地与夜间照明共同构成场地的生活场景。')
-    b.image(park(7),52,177,768,432)
+    b.compressed_image(ROOT/'output/pdf/source-assets/1532-park-detail-07.jpg',52,177,768,432)
     b.cap('林下交流空间与建筑界面',52,628)
     b.image(park(8),844,177,384,215)
     b.cap('B612 草地节点',844,402)
     b.image(park(5),844,437,384,189)
     b.cap('夜间休闲场景',844,640)
 
-    # 09-13 / Office: context, plan and performance of materials/light.
+    b.boards('01', '项目全貌', '潍坊市 1532 产业园改造<br/>从整体视觉到场地分析，呈现公共空间更新的设计线索。',
+             [(poster, '海报', '项目视觉与设计主题'),
+              (pb1, '展板 01', '场地分析与设计策略')], 'park-boards-01')
+    b.boards('01', '策略与场景', '世纪绿洲 / 生态疗愈景观<br/>将生态系统、节点设计与场景表达联结为完整方案。',
+             [(pb2, '展板 02', '系统分析与景观节点'),
+              (pb3, '展板 03', '效果展示与场景细节')], 'park-boards-02')
+
+    # 11-16 / Office: context, plan, materials/light and complete boards.
     b.opener('02',['LUMEN','1532 办公空间'],'WORKPLACE DESIGN',
              '旧厂房改造 / AI 工作室',
              '以展示、交流与创作为线索，在工业肌理中引入温暖材质、自然光和灵活协作场景，组织开放与私密之间的层次。',
@@ -351,10 +433,18 @@ def build():
     b.rect(52,178,713,404,'#F0E4CE')
     b.image(ob1,52,178,713,404,mode='contain',crop=(.057,.857,.394,.971))
     b.cap('平面布局',52,598,'以共享区域联结办公、洽谈、展示与休闲节点。',width=713)
-    b.image(ob1,798,178,430,223,mode='contain',crop=(.425,.846,.611,.934))
-    b.cap('功能分区',798,412)
-    b.image(ob1,798,452,430,183,mode='contain',crop=(.619,.844,.802,.934))
-    b.text('流线组织',798,645,12,'Sans',MUTED)
+    with Image.open(ob1) as board:
+        board_w, board_h = board.size
+    for y, label, crop in [
+        (178, '功能分区', (.425,.846,.611,.934)),
+        (428, '流线组织', (.619,.844,.802,.934)),
+    ]:
+        a, top, right, bottom = crop
+        crop_w = int(right*board_w)-int(a*board_w)
+        crop_h = int(bottom*board_h)-int(top*board_h)
+        height = 300*crop_h/crop_w
+        b.image(ob1,863,y,300,height,mode='contain',crop=crop)
+        b.cap(label,863,y+height+14,width=300)
 
     b.begin('02 / Open Collaboration','协作，从开放的公共界面开始',
             '从共享工位到休闲吧台，以材质连续性组织公共交流。')
@@ -384,7 +474,11 @@ def build():
     b.image(office(14),806,454,422,174)
     b.cap('展览展示空间',806,640)
 
-    # 14-17 / AIGC concept: distinguish concept exploration from built work.
+    b.boards('02', '完整方案', 'LUMEN / 1532 办公空间<br/>从前期分析、功能布局到空间效果与材料表达，展示旧厂房的办公转译。',
+             [(ob1, '展板 01', '前期分析与空间组织'),
+              (ob2, '展板 02', '场景效果与材料表达')], 'office-boards')
+
+    # 17-20 / AIGC concept: distinguish concept exploration from built work.
     b.opener('03',['海洋艺术','与生态科技'],'AIGC CONCEPT SPACE',
              '概念展馆 / 沉浸式空间探索',
              '以海洋意象、生态科技与未来展陈为关键词，探索流动体量、自然界面和沉浸体验之间的关系。',
@@ -420,7 +514,7 @@ def build():
     b.para('AIGC 的价值，是拓展方案推演与表达的可能；设计判断仍决定画面的取舍与空间逻辑。',
            944,462,275,15,28,ACCENT,maxh=169)
 
-    # 18-19 / Family home.
+    # 21-22 / Family home.
     b.opener('04',['柔和的','居住秩序'],'FAMILY HOME',
              '三口之家侘寂风住宅设计',
              '以低饱和材质、自然肌理与柔和光线塑造安静的居住氛围，兼顾共同生活、独处与休憩的不同需求。',
@@ -435,7 +529,7 @@ def build():
     b.image(family(3),798,468,430,158)
     b.cap('直播与居家工作空间',798,640)
 
-    # 20-22 / Compact living. Photo-style assets are not labelled as completed construction.
+    # 23-25 / Compact living. Photo-style assets are not labelled as completed construction.
     b.opener('05',['一人居所','完整的生活场景'],'COMPACT APARTMENT',
              '单人公寓室内设计',
              '围绕单人生活方式整合厨房、休息、娱乐与收纳，让有限面积下的空间保持功能连续与视觉秩序。',
@@ -457,7 +551,7 @@ def build():
         b.image(PUBLIC/'single-apartment/renders'/name,x,183,276,414,mode='contain')
         b.cap(caption,x,617,width=276)
 
-    # 23-24 / Garden sequence.
+    # 26-27 / Garden sequence.
     b.opener('06',['庭院有境','归家的另一段路'],'COURTYARD LANDSCAPE',
              '庭院营造 / 景观设计',
              '以前院、后院、侧道与影壁组织归家与停留，将植物层次、水景、材料与夜间照明转化为安静的户外生活体验。',
@@ -474,7 +568,7 @@ def build():
     b.image(court(4),1047,178,181,325,mode='contain')
     b.cap('影壁 / 材料界面',1047,519,width=181)
 
-    # 25 / Personal methodology and working video links.
+    # 28 / Personal methodology and working video links.
     b.begin('Practice / Design & AIGC','以设计判断，连接工具与成果',
             '个人方法与实践  /  把 AI 辅助创作纳入清晰的设计表达过程。',key='practice')
     steps = [('01','分析','场地、使用者与功能需求'),('02','推演','概念方向与方案比较'),
@@ -500,7 +594,7 @@ def build():
     b.text('海洋艺术与生态科技',778,530,19,'Serif')
     b.link('观看概念短片',VIDEO_OCEAN,778,573,13)
 
-    # 26 / Closing spread: contact details remain selectable and clickable.
+    # 29 / Closing spread: contact details remain selectable and clickable.
     b.begin('Contact / Available for Internship',key='contact')
     b.text('LET\'S CREATE',52,104,66,'LatinLight',ACCENT,tracking=2)
     b.text('让空间设计与 AIGC 协同工作。',52,225,43,'Serif')
@@ -512,7 +606,7 @@ def build():
     b.text('潍坊学院 · 环境设计本科 · 2027 届',52,592,14,'Sans',MUTED)
     b.link(EMAIL,'mailto:'+EMAIL,491,551,18)
     b.link(PHONE,'tel:13361444417',491,598,16)
-    b.image(park(9),961,102,267,547,anchor=(.25,.5))
+    draw_closing_axonometric(b)
     b.save()
 
 

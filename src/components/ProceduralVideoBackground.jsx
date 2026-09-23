@@ -13,7 +13,7 @@ export function ProceduralVideoBackground() {
   useEffect(() => {
     const canvas = canvasRef.current
 
-    if (!canvas) {
+    if (!canvas || !showCanvas) {
       return undefined
     }
 
@@ -157,7 +157,7 @@ export function ProceduralVideoBackground() {
       window.cancelAnimationFrame(frameId)
       window.removeEventListener('resize', resize)
     }
-  }, [])
+  }, [showCanvas])
 
   useEffect(() => {
     const video = videoRef.current
@@ -216,17 +216,17 @@ export function ProceduralVideoBackground() {
       />
       <Ferrofluid
         className="hero-ferrofluid"
-        colors={['#ffe7dc', '#ff6a42', '#ff2e18']}
+        colors={['#eef1e5', '#8caa8b', '#4c6c64']}
         speed={0.52}
         scale={1.28}
         turbulence={1.28}
         fluidity={0.08}
         rimWidth={0.15}
         sharpness={3.8}
-        shimmer={1.2}
-        glow={1.8}
+        shimmer={0.2}
+        glow={0.4}
         flowDirection="up"
-        opacity={0.48}
+        opacity={0.16}
         mouseInteraction
         mouseStrength={0.8}
         mouseRadius={0.22}

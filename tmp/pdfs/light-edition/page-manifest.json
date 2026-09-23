@@ -3,9 +3,8 @@
     "page": 1,
     "chapter": "Environmental Art & Spatial Design",
     "title": null,
-    "images": [
-      "public\\portfolio\\1532-park\\renders\\render-11.jpeg"
-    ]
+    "images": [],
+    "illustration": "Original vector axonometric / abstract spatial composition"
   },
   {
     "page": 2,
@@ -25,7 +24,7 @@
       "public\\portfolio\\concept-space\\renders\\render-08.png",
       "public\\portfolio\\family-home\\renders\\render-01.jpeg",
       "public\\portfolio\\single-apartment\\renders\\render-01.png",
-      "public\\portfolio\\courtyard\\renders\\render-02.jpeg"
+      "public\\portfolio\\courtyard\\renders\\render-01.jpeg"
     ]
   },
   {
@@ -67,13 +66,39 @@
     "chapter": "01 / Social Landscape",
     "title": "从白昼到夜晚，延续公共生活",
     "images": [
-      "public\\portfolio\\1532-park\\renders\\render-07.png",
+      "output\\pdf\\source-assets\\1532-park-detail-07.jpg",
       "public\\portfolio\\1532-park\\renders\\render-08.jpeg",
       "public\\portfolio\\1532-park\\renders\\render-05.jpeg"
     ]
   },
   {
     "page": 9,
+    "chapter": "01 / Original Presentation Boards",
+    "title": null,
+    "images": [
+      "public\\portfolio\\1532-park-cover.jpg",
+      "public\\portfolio\\1532-park\\boards\\board-01.jpg"
+    ],
+    "full_boards": [
+      "public\\portfolio\\1532-park-cover.jpg",
+      "public\\portfolio\\1532-park\\boards\\board-01.jpg"
+    ]
+  },
+  {
+    "page": 10,
+    "chapter": "01 / Original Presentation Boards",
+    "title": null,
+    "images": [
+      "public\\portfolio\\1532-park\\boards\\board-02.jpg",
+      "output\\pdf\\source-assets\\1532-park-board-03.jpg"
+    ],
+    "full_boards": [
+      "public\\portfolio\\1532-park\\boards\\board-02.jpg",
+      "output\\pdf\\source-assets\\1532-park-board-03.jpg"
+    ]
+  },
+  {
+    "page": 11,
     "chapter": "02 / WORKPLACE DESIGN",
     "title": null,
     "images": [
@@ -81,7 +106,7 @@
     ]
   },
   {
-    "page": 10,
+    "page": 12,
     "chapter": "02 / Plan & Programme",
     "title": "用空间关系，回应不同的工作状态",
     "images": [
@@ -91,7 +116,7 @@
     ]
   },
   {
-    "page": 11,
+    "page": 13,
     "chapter": "02 / Open Collaboration",
     "title": "协作，从开放的公共界面开始",
     "images": [
@@ -100,7 +125,7 @@
     ]
   },
   {
-    "page": 12,
+    "page": 14,
     "chapter": "02 / Day & Night",
     "title": "光线，让同一空间拥有不同节奏",
     "images": [
@@ -109,7 +134,7 @@
     ]
   },
   {
-    "page": 13,
+    "page": 15,
     "chapter": "02 / Work, Talk & Pause",
     "title": "不同尺度的交流，与专注并存",
     "images": [
@@ -119,7 +144,20 @@
     ]
   },
   {
-    "page": 14,
+    "page": 16,
+    "chapter": "02 / Original Presentation Boards",
+    "title": null,
+    "images": [
+      "public\\portfolio\\1532-office\\boards\\board-01.jpg",
+      "public\\portfolio\\1532-office\\boards\\board-02.jpg"
+    ],
+    "full_boards": [
+      "public\\portfolio\\1532-office\\boards\\board-01.jpg",
+      "public\\portfolio\\1532-office\\boards\\board-02.jpg"
+    ]
+  },
+  {
+    "page": 17,
     "chapter": "03 / AIGC CONCEPT SPACE",
     "title": null,
     "images": [
@@ -127,7 +165,7 @@
     ]
   },
   {
-    "page": 15,
+    "page": 18,
     "chapter": "03 / Form & Nature",
     "title": "让自然意象，成为空间语言",
     "images": [
@@ -136,7 +174,7 @@
     ]
   },
   {
-    "page": 16,
+    "page": 19,
     "chapter": "03 / Immersive Interior",
     "title": "以光、水与曲面，组织沉浸式观看",
     "images": [
@@ -145,7 +183,7 @@
     ]
   },
   {
-    "page": 17,
+    "page": 20,
     "chapter": "03 / Material & Atmosphere",
     "title": "从建筑尺度，走近材料与感知",
     "images": [
@@ -155,7 +193,7 @@
     ]
   },
   {
-    "page": 18,
+    "page": 21,
     "chapter": "04 / FAMILY HOME",
     "title": null,
     "images": [
@@ -163,7 +201,7 @@
     ]
   },
   {
-    "page": 19,
+    "page": 22,
     "chapter": "04 / Everyday Living",
     "title": "让日常功能，拥有统一的温度",
     "images": [
@@ -173,7 +211,7 @@
     ]
   },
   {
-    "page": 20,
+    "page": 23,
     "chapter": "05 / COMPACT APARTMENT",
     "title": null,
     "images": [
@@ -181,7 +219,7 @@
     ]
   },
   {
-    "page": 21,
+    "page": 24,
     "chapter": "05 / Function & Rhythm",
     "title": "把生活功能，组织成连续的空间",
     "images": [
@@ -190,7 +228,7 @@
     ]
   },
   {
-    "page": 22,
+    "page": 25,
     "chapter": "05 / Lived Atmosphere",
     "title": "让人物尺度，回到空间之中",
     "images": [
@@ -201,7 +239,7 @@
     ]
   },
   {
-    "page": 23,
+    "page": 26,
     "chapter": "06 / COURTYARD LANDSCAPE",
     "title": null,
     "images": [
@@ -209,7 +247,7 @@
     ]
   },
   {
-    "page": 24,
+    "page": 27,
     "chapter": "06 / Arrival & Pause",
     "title": "在行走与停留之间，建立庭院层次",
     "images": [
@@ -219,17 +257,16 @@
     ]
   },
   {
-    "page": 25,
+    "page": 28,
     "chapter": "Practice / Design & AIGC",
     "title": "以设计判断，连接工具与成果",
     "images": []
   },
   {
-    "page": 26,
+    "page": 29,
     "chapter": "Contact / Available for Internship",
     "title": null,
-    "images": [
-      "public\\portfolio\\1532-park\\renders\\render-09.jpeg"
-    ]
+    "images": [],
+    "illustration": "Original vector axonometric / Pei-inspired geometric light court"
   }
 ]

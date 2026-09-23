@@ -4,17 +4,18 @@ import PortfolioMotion from './components/PortfolioMotion'
 import PortfolioCard from './components/PortfolioCard'
 import ProfileCard from './components/ProfileCard'
 import { ProceduralVideoBackground } from './components/ProceduralVideoBackground'
-import portraitCaoShuo from './assets/portrait-cao-shuo.png'
+const portraitCaoShuo = '/portfolio/portrait-cao-shuo.preview.webp'
+const previewSrc = (src) => src.replace(/\.(png|jpe?g)$/i, '.preview.webp')
 
 const contactEmail = 'fengfan3812@gmail.com'
 const gmailComposeUrl = 'https://mail.google.com/mail/?view=cm&fs=1&to=' + contactEmail
 
 const navigation = [
-  { label: '首页', href: '#top' },
-  { label: '个人经历', href: '#about' },
-  { label: '精选项目', href: '#projects' },
-  { label: '个人优势', href: '#strengths' },
-  { label: '联系我', href: '#contact' },
+  { label: '首页', mobileLabel: '首页', href: '#top' },
+  { label: '个人经历', mobileLabel: '经历', href: '#about' },
+  { label: '精选项目', mobileLabel: '项目', href: '#projects' },
+  { label: '个人优势', mobileLabel: '优势', href: '#strengths' },
+  { label: '联系我', mobileLabel: '联系', href: '#contact' },
 ]
 
 const profileStats = [
@@ -335,6 +336,9 @@ function ZoomablePreviewImage({ item }) {
   const canvasRef = useRef(null)
   const imageRef = useRef(null)
   const dragRef = useRef(null)
+  const pointersRef = useRef(new Map())
+  const pinchRef = useRef(null)
+  const viewRef = useRef({ scale: 1, position: { x: 0, y: 0 } })
   const [scale, setScale] = useState(1)
   const [position, setPosition] = useState({ x: 0, y: 0 })
   const [isDragging, setIsDragging] = useState(false)
@@ -354,15 +358,26 @@ function ZoomablePreviewImage({ item }) {
     }
   }
 
+  const updateView = (nextScale, nextPosition) => {
+    const nextView = { scale: nextScale, position: clampPosition(nextPosition, nextScale) }
+    viewRef.current = nextView
+    setScale(nextView.scale)
+    setPosition(nextView.position)
+  }
+
   const resetView = () => {
     dragRef.current = null
+    pointersRef.current.clear()
+    pinchRef.current = null
     setIsDragging(false)
-    setScale(1)
-    setPosition({ x: 0, y: 0 })
+    updateView(1, { x: 0, y: 0 })
   }
 
   useEffect(() => {
     dragRef.current = null
+    pointersRef.current.clear()
+    pinchRef.current = null
+    viewRef.current = { scale: 1, position: { x: 0, y: 0 } }
     setIsDragging(false)
     setScale(1)
     setPosition({ x: 0, y: 0 })
@@ -374,26 +389,49 @@ function ZoomablePreviewImage({ item }) {
     const canvas = canvasRef.current
     if (!canvas) return
 
-    const nextScale = Math.max(1, Math.min(5, scale * Math.exp(-event.deltaY * 0.0015)))
-    if (Math.abs(nextScale - scale) < 0.001) return
+    const { scale: currentScale, position: currentPosition } = viewRef.current
+    const nextScale = Math.max(1, Math.min(5, currentScale * Math.exp(-event.deltaY * 0.0015)))
+    if (Math.abs(nextScale - currentScale) < 0.001) return
 
     const bounds = canvas.getBoundingClientRect()
     const pointer = {
       x: event.clientX - bounds.left - bounds.width / 2,
       y: event.clientY - bounds.top - bounds.height / 2,
     }
-    const ratio = nextScale / scale
+    const ratio = nextScale / currentScale
     const nextPosition = {
-      x: pointer.x - (pointer.x - position.x) * ratio,
-      y: pointer.y - (pointer.y - position.y) * ratio,
+      x: pointer.x - (pointer.x - currentPosition.x) * ratio,
+      y: pointer.y - (pointer.y - currentPosition.y) * ratio,
     }
 
-    setScale(nextScale)
-    setPosition(clampPosition(nextPosition, nextScale))
+    updateView(nextScale, nextPosition)
   }
 
   const handlePointerDown = (event) => {
-    if (event.button !== 0 || scale <= 1) return
+    if (event.pointerType === 'touch') {
+      event.preventDefault()
+      event.currentTarget.setPointerCapture(event.pointerId)
+      pointersRef.current.set(event.pointerId, { x: event.clientX, y: event.clientY })
+
+      if (pointersRef.current.size === 2) {
+        const [first, second] = [...pointersRef.current.values()]
+        const bounds = event.currentTarget.getBoundingClientRect()
+        pinchRef.current = {
+          distance: Math.hypot(second.x - first.x, second.y - first.y),
+          scale: viewRef.current.scale,
+          position: viewRef.current.position,
+          center: {
+            x: (first.x + second.x) / 2 - bounds.left - bounds.width / 2,
+            y: (first.y + second.y) / 2 - bounds.top - bounds.height / 2,
+          },
+        }
+        dragRef.current = null
+        setIsDragging(true)
+        return
+      }
+    }
+
+    if (event.button !== 0 || viewRef.current.scale <= 1) return
 
     event.preventDefault()
     event.currentTarget.setPointerCapture(event.pointerId)
@@ -401,30 +439,66 @@ function ZoomablePreviewImage({ item }) {
       pointerId: event.pointerId,
       startX: event.clientX,
       startY: event.clientY,
-      originX: position.x,
-      originY: position.y,
+      originX: viewRef.current.position.x,
+      originY: viewRef.current.position.y,
     }
     setIsDragging(true)
   }
 
   const handlePointerMove = (event) => {
+    if (event.pointerType === 'touch' && pointersRef.current.has(event.pointerId)) {
+      pointersRef.current.set(event.pointerId, { x: event.clientX, y: event.clientY })
+
+      if (pinchRef.current && pointersRef.current.size >= 2) {
+        const [first, second] = [...pointersRef.current.values()]
+        const distance = Math.hypot(second.x - first.x, second.y - first.y)
+        const nextScale = Math.max(1, Math.min(5, pinchRef.current.scale * distance / Math.max(pinchRef.current.distance, 1)))
+        const ratio = nextScale / pinchRef.current.scale
+        const bounds = event.currentTarget.getBoundingClientRect()
+        const center = {
+          x: (first.x + second.x) / 2 - bounds.left - bounds.width / 2,
+          y: (first.y + second.y) / 2 - bounds.top - bounds.height / 2,
+        }
+        updateView(nextScale, {
+          x: center.x - (pinchRef.current.center.x - pinchRef.current.position.x) * ratio,
+          y: center.y - (pinchRef.current.center.y - pinchRef.current.position.y) * ratio,
+        })
+        return
+      }
+    }
+
     const drag = dragRef.current
     if (!drag || drag.pointerId !== event.pointerId) return
 
-    setPosition(clampPosition({
+    updateView(viewRef.current.scale, {
       x: drag.originX + event.clientX - drag.startX,
       y: drag.originY + event.clientY - drag.startY,
-    }, scale))
+    })
   }
 
   const endDrag = (event) => {
-    if (dragRef.current?.pointerId !== event.pointerId) return
-
+    if (event.pointerType === 'touch') {
+      pointersRef.current.delete(event.pointerId)
+      if (pinchRef.current && pointersRef.current.size < 2) {
+        pinchRef.current = null
+        const remaining = [...pointersRef.current.entries()][0]
+        dragRef.current = remaining && viewRef.current.scale > 1 ? {
+          pointerId: remaining[0],
+          startX: remaining[1].x,
+          startY: remaining[1].y,
+          originX: viewRef.current.position.x,
+          originY: viewRef.current.position.y,
+        } : null
+        setIsDragging(Boolean(dragRef.current))
+      }
+    }
     if (event.currentTarget.hasPointerCapture(event.pointerId)) {
       event.currentTarget.releasePointerCapture(event.pointerId)
     }
-    dragRef.current = null
-    setIsDragging(false)
+    if (dragRef.current?.pointerId === event.pointerId) {
+      dragRef.current = null
+      setIsDragging(false)
+    }
   }
 
   return (
@@ -440,13 +514,24 @@ function ZoomablePreviewImage({ item }) {
     >
       <img
         ref={imageRef}
-        src={item.src}
+        src={item.src.replace(/\.(png|jpe?g)$/i, '.full.webp')}
         alt={item.title}
         draggable="false"
         style={{ transform: `translate3d(${position.x}px, ${position.y}px, 0) scale(${scale})` }}
       />
-      <span className="image-preview-help">滚轮缩放 · 左键拖动 · 双击复位</span>
-      <span className="image-preview-zoom">{Math.round(scale * 100)}%</span>
+      <span className="image-preview-help">
+        <span className="image-preview-help-mouse">滚轮缩放 · 左键拖动 · 双击复位</span>
+        <span className="image-preview-help-touch">双指缩放 · 放大后拖动</span>
+      </span>
+      <button
+        type="button"
+        className="image-preview-zoom"
+        aria-label={scale > 1 ? '重置图片缩放' : '放大图片'}
+        onPointerDown={(event) => event.stopPropagation()}
+        onClick={() => updateView(scale > 1 ? 1 : 3, { x: 0, y: 0 })}
+      >
+        {Math.round(scale * 100)}%
+      </button>
     </div>
   )
 }
@@ -526,13 +611,13 @@ function ProjectDetailPage({ project, onOpenMedia, onOpenImage }) {
                       )
                     }
                   >
-                    <img src={board.src} alt={board.alt} />
+                    <img src={previewSrc(board.src)} alt={board.alt} decoding="async" />
                     <span>查看原图</span>
                   </button>
                 )
               })
             ) : (
-              <img src={project.image} alt={project.title} />
+              <img src={previewSrc(project.image)} alt={project.title} decoding="async" />
             )}
           </div>
         </div>
@@ -549,7 +634,7 @@ function ProjectDetailPage({ project, onOpenMedia, onOpenImage }) {
             {images.map((item) => (
               <article key={item.src} className="project-detail-gallery-card">
                 <button type="button" onClick={() => onOpenImage(item, images)}>
-                  <img src={item.src} alt={item.title} loading="lazy" />
+                  <img src={previewSrc(item.src)} alt={item.title} loading="lazy" decoding="async" />
                 </button>
                 <div>
                   <strong>{item.title}</strong>
@@ -593,6 +678,7 @@ function ProjectDetailPage({ project, onOpenMedia, onOpenImage }) {
 
 export default function App() {
   const [navCompact, setNavCompact] = useState(false)
+  const [activeSection, setActiveSection] = useState('#top')
   const [projectMediaModal, setProjectMediaModal] = useState(null)
   const [imagePreview, setImagePreview] = useState(null)
   const [pathname, setPathname] = useState(() => window.location.pathname)
@@ -626,6 +712,7 @@ export default function App() {
     const handleScroll = () => {
       if (activeProject) {
         setNavCompact(window.scrollY > 80)
+        setActiveSection('#projects')
         return
       }
 
@@ -634,6 +721,12 @@ export default function App() {
 
       const compactThreshold = Math.max(heroSection.offsetHeight - 180, window.innerHeight * 0.72)
       setNavCompact(window.scrollY >= compactThreshold)
+      const readingLine = window.innerHeight * 0.35
+      const currentSection = [...navigation].reverse().find(({ href }) => {
+        const section = document.querySelector(href)
+        return section && section.getBoundingClientRect().top <= readingLine
+      })
+      setActiveSection(currentSection?.href ?? '#top')
     }
 
     handleScroll()
@@ -727,13 +820,14 @@ export default function App() {
             <span className="brand-mark" />
             <span>CAO SHUO / PORTFOLIO</span>
           </a>
-          <div className="nav-links">
+          <nav className="nav-links" aria-label="主导航">
             {navigation.map((item) => (
-              <a key={item.href} className={item.href === '#top' ? 'is-active' : ''} href={navHref(item.href)}>
-                {item.label}
+              <a key={item.href} className={item.href === activeSection ? 'is-active' : ''} aria-label={item.label} aria-current={item.href === activeSection ? 'location' : undefined} href={navHref(item.href)}>
+                <span className="nav-label-full">{item.label}</span>
+                <span className="nav-label-mobile" aria-hidden="true">{item.mobileLabel}</span>
               </a>
             ))}
-          </div>
+          </nav>
           <a
             className="button button-ghost nav-cta"
             href={gmailComposeUrl}
@@ -771,7 +865,7 @@ export default function App() {
             <h1>
               <span className="hero-title-en">PORTFOLIO</span>
             </h1>
-            <p className="hero-caption">空间灵感生成，克制表达，精准落地。</p>
+            <p className="hero-caption"><span>空间灵感生成，</span><span>克制表达，精准落地。</span></p>
             <p className="hero-text">
               聚焦室内设计、AI 概念生成与景观规划实践，
               用更清晰的空间逻辑和更高效的表达方式推动方案成立。
@@ -816,7 +910,8 @@ export default function App() {
                   enableTilt={true}
                   enableMobileTilt={false}
                   behindGlowEnabled
-                  innerGradient="linear-gradient(160deg, rgba(255,123,0,0.18) 0%, rgba(255,255,255,0.02) 52%, rgba(36,56,84,0.22) 100%)"
+                  behindGlowColor="rgba(112, 139, 95, 0.12)"
+                  innerGradient="linear-gradient(160deg, #eef0e7 0%, #e4e9dc 60%, #d9e0d0 100%)"
                 />
               </div>
 
@@ -914,21 +1009,21 @@ export default function App() {
                           }))
 
                           return (
-                            <div className="project-board-item" key={board.src}>
-                              <img className="motion-visual" src={board.src} alt={board.alt} />
-                              <button
-                                type="button"
-                                className="project-board-open"
-                                onClick={() => setImagePreview({ items: boardItems, index })}
-                              >
-                                查看原图
-                              </button>
-                            </div>
+                            <button
+                              type="button"
+                              className="project-board-item"
+                              key={board.src}
+                              aria-label={`查看${project.title}展板 ${index + 1} 原图`}
+                              onClick={() => setImagePreview({ items: boardItems, index })}
+                            >
+                              <img className="motion-visual" src={previewSrc(board.src)} alt={board.alt} loading="lazy" decoding="async" />
+                              <span className="project-board-open" aria-hidden="true">查看原图</span>
+                            </button>
                           )
                         })}
                       </div>
                     ) : (
-                      <img className="motion-visual" src={project.image} alt={project.title} />
+                      <img className="motion-visual" src={previewSrc(project.image)} alt={project.title} loading="lazy" decoding="async" />
                     )}
                   </div>
                   <div className="project-info">
@@ -997,7 +1092,7 @@ export default function App() {
                               })
                             }
                           >
-                            <img src={item.src} alt={item.title} loading="lazy" />
+                            <img src={previewSrc(item.src)} alt={item.title} loading="lazy" decoding="async" />
                             <span>{item.title}</span>
                           </button>
                         ))}
@@ -1015,7 +1110,7 @@ export default function App() {
                               })
                             }
                           >
-                            <img src={item.poster} alt={item.title} loading="lazy" />
+                            <img src={previewSrc(item.poster)} alt={item.title} loading="lazy" decoding="async" />
                             <span>播放短片</span>
                           </button>
                         ))}
@@ -1096,11 +1191,11 @@ export default function App() {
 
       {projectMediaModal ? createPortal(
         <div className="project-modal-backdrop" onClick={() => setProjectMediaModal(null)}>
-          <div className="project-modal-shell" onClick={(event) => event.stopPropagation()}>
+          <div className="project-modal-shell" role="dialog" aria-modal="true" aria-labelledby="project-media-heading" onClick={(event) => event.stopPropagation()}>
             <div className="project-modal-head">
               <div>
                 <p className="mini-label">Project Media</p>
-                <h3>{projectMediaModal.title}</h3>
+                <h3 id="project-media-heading">{projectMediaModal.title}</h3>
                 <p>{projectMediaModal.subtitle}</p>
               </div>
               <button
@@ -1122,7 +1217,7 @@ export default function App() {
                     {projectMediaModal.type === 'videos' ? (
                       <ProjectVideoEmbed item={item} />
                     ) : (
-                      <img src={item.src} alt={item.title} loading="lazy" />
+                      <img src={previewSrc(item.src)} alt={item.title} loading="lazy" decoding="async" />
                     )}
                   </div>
                   <div className="project-media-slot-copy">
@@ -1149,11 +1244,11 @@ export default function App() {
 
       {currentPreview ? createPortal(
         <div className="image-preview-backdrop" onClick={() => setImagePreview(null)}>
-          <div className="image-preview-shell" onClick={(event) => event.stopPropagation()}>
+          <div className="image-preview-shell" role="dialog" aria-modal="true" aria-labelledby="image-preview-heading" onClick={(event) => event.stopPropagation()}>
             <div className="image-preview-head">
               <div>
                 <p className="mini-label">Original Image</p>
-                <h3>{currentPreview.title}</h3>
+                <h3 id="image-preview-heading">{currentPreview.title}</h3>
                 <p>{currentPreview.meta}</p>
               </div>
               <button
