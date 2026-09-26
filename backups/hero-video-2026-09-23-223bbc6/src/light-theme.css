@@ -225,29 +225,6 @@ html { scroll-padding-top: 108px; }
   .about-grid { grid-template-columns: 1fr; }
   .portrait-card-shell { width: min(100%,440px); min-height: 600px; margin-inline: auto; }
   .pc-card { min-height: 600px; }
-  .portrait-card-shell .pc-avatar-content {
-    position: absolute;
-    inset: 0 0 160px;
-    grid-area: auto;
-    transform: none;
-  }
-  .portrait-card-shell .pc-avatar-content .avatar {
-    height: calc(100% - 24px);
-  }
-  .portrait-card-shell .pc-content:not(.pc-avatar-content) {
-    position: absolute;
-    inset: auto 0 24px;
-    grid-area: auto;
-    max-height: none;
-    overflow: visible;
-    transform: none;
-  }
-  .portrait-card-shell .pc-details {
-    position: static;
-    top: auto;
-    transform: none;
-    padding: 0 16px;
-  }
 }
 
 @media (min-height: 1020px) and (min-width: 1001px) {
@@ -302,7 +279,7 @@ html { scroll-padding-top: 108px; }
   .contact-card { padding: 22px; }
   .about-copy h2 { font-size: 1.7rem; }
   .portrait-card-shell,
-  .pc-card { min-height: clamp(600px, 164vw, 700px); }
+  .pc-card { min-height: 500px; }
   .detail-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .detail-card { padding: 16px 12px; }
   .stats-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }

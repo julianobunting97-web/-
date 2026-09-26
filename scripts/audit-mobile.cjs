@@ -45,6 +45,17 @@ async function main() {
       assert.ok(report.entries['.hero-media'].y < 730, `Hero video too low at ${width}`)
       assert.ok(report.entries['.project-board-strip'].height < 450, `Boards too tall at ${width}`)
       await page.screenshot({ path: path.join(out, `hero-${width}.png`) })
+      await page.locator('.portrait-card-shell').scrollIntoViewIfNeeded()
+      await page.waitForTimeout(350)
+      const portrait = await page.evaluate(() => {
+        const avatar = document.querySelector('.portrait-card-shell .avatar').getBoundingClientRect()
+        const details = document.querySelector('.portrait-card-shell .pc-details').getBoundingClientRect()
+        const card = document.querySelector('.portrait-card-shell .pc-card').getBoundingClientRect()
+        return { avatarBottom: avatar.bottom, detailsTop: details.top, detailsBottom: details.bottom, cardBottom: card.bottom }
+      })
+      assert.ok(portrait.detailsTop >= portrait.avatarBottom + 8, `Portrait overlaps name at ${width}: ${JSON.stringify(portrait)}`)
+      assert.ok(portrait.detailsBottom <= portrait.cardBottom - 8, `Portrait name leaves card at ${width}: ${JSON.stringify(portrait)}`)
+      await page.screenshot({ path: path.join(out, `portrait-${width}.png`) })
       await page.locator('#about').scrollIntoViewIfNeeded()
       await page.waitForTimeout(350)
       await page.screenshot({ path: path.join(out, `about-${width}.png`) })
